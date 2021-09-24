@@ -5,6 +5,9 @@ node {
     }
 
     stage('Maven Build') {
+       dir("k8s-jenkins") {
+           sh "pwd"
+       }
        sh 'mvn clean install'
     }
 
