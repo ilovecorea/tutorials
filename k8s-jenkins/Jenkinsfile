@@ -1,0 +1,28 @@
+node {
+
+    stage("Git Clone") {
+        git credentialsId: 'GIT_HUB_CREDENTIALS', url: 'https://github.com/ilovecorea/k8s-jenkins'
+    }
+
+    stage('Maven Build') {
+       sh 'mvn clean install'
+    }
+
+    stage("Docker build"){
+        sh 'docker version'
+        sh 'docker build -t hello-springboot .'
+        sh 'docker image list'
+        sh 'docker tag hello-springboot ilovecorea/hello-springboot:latest'
+    }
+
+    stage("Docker Login") {
+        withCredentials([string(credentialsId: 'DOCKER_HUB_PASSWORD', variable: 'PASSWORD')]) {
+            sh 'docker login -u ilovecorea -p $PASSWORD'
+        }
+    }
+
+    stage("Push Image to Docker Hub") {
+        sh 'docker push ilovecorea/hello-springboot:latest'
+    }
+
+}
