@@ -5,15 +5,12 @@ node {
     }
 
     stage('Maven Build') {
-       dir("k8s-jenkins") {
-           sh "pwd"
-       }
-       sh 'mvn clean install'
+        sh 'cd ./k8s-jenkins && mvn clean install'
     }
 
-    stage("Docker build"){
+    stage("Docker build") {
         sh 'docker version'
-        sh 'docker build -t hello-springboot .'
+        sh 'cd ./k8s-jenkins && docker build -t hello-springboot .'
         sh 'docker image list'
         sh 'docker tag hello-springboot ilovecorea/hello-springboot:latest'
     }
@@ -28,4 +25,16 @@ node {
         sh 'docker push ilovecorea/hello-springboot:latest'
     }
 
+    stage("SSH Into k8s Server") {
+        def remote = [:]
+        remote.name = 'K8S master'
+        remote.host = '100.0.0.2'
+        remote.user = 'vagrant'
+        remote.password = 'vagrant'
+        remote.allowAnyHosts = true
+    }
+
+    stage('Put k8s-spring-boot-deployment.yml onto k8smaster') {
+        sshPut remote: remote, from: './k8s-jenkins/k8s-deployment.yml', into: '.'
+    }
 }
