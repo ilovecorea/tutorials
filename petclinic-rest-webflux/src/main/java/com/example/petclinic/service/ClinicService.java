@@ -58,8 +58,14 @@ public class ClinicService {
         .switchIfEmpty(Mono.error(new EmptyResultDataAccessException(1)));
   }
 
+  @Transactional
   public Mono<Owner> saveOwner(Owner owner) {
     return ownerRepository.save(owner);
+  }
+
+  public Mono<Pet> findPetById(int id) {
+    return petRepository.findPetWithOwnerById(databaseClient, id)
+        .switchIfEmpty(Mono.error(new EmptyResultDataAccessException(1)));
   }
 }
 

@@ -50,7 +50,7 @@ public class Owner implements Persistable<Integer> {
   private String telephone;
 
   @Transient
-  private List<Pet> pets = new ArrayList<>();
+  private List<Pet> pets;
 
   public boolean isNew() {
     return this.id == null;

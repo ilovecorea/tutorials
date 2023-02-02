@@ -4,7 +4,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import com.example.petclinic.model.Role;
 import com.example.petclinic.model.User;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -27,12 +29,13 @@ class UserServiceTests extends BaseServiceTests {
 
   @Test
   public void shouldAddUser() throws Exception {
-    User user = new User();
-    user.setUsername("username");
-    user.setPassword("password");
-    user.setEnabled(true);
-    user.addRole("OWNER_ADMIN");
-    user.setIsNew(true);
+    User user = User.builder()
+        .username("username")
+        .password("password")
+        .isNew(true)
+        .enabled(true)
+        .roles(List.of(Role.builder().name("OWNER_ADMIN").build()))
+        .build();
 
     userService.saveUser(user)
         .as(StepVerifier::create)

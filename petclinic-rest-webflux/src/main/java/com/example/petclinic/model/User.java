@@ -34,16 +34,10 @@ public class User implements Persistable<String> {
     private Boolean enabled;
 
     @Transient
-    private List<Role> roles = new ArrayList<>();
+    private List<Role> roles;
 
     @Transient
     private Boolean isNew;
-
-    public void addRole(String roleName) {
-        Role role = new Role();
-        role.setName(roleName);
-        this.roles.add(role);
-    }
 
     @Override
     public String getId() {

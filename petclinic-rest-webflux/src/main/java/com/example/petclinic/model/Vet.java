@@ -36,11 +36,7 @@ public class Vet implements Persistable<Integer> {
     protected String lastName;
 
     @Transient
-    private List<Specialty> specialties = new ArrayList<>();
-
-    public void addSpecialty(Specialty specialty) {
-        specialties.add(specialty);
-    }
+    private List<Specialty> specialties;
 
     public boolean isNew() {
         return this.id == null;

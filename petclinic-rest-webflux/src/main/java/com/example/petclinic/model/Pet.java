@@ -43,11 +43,7 @@ public class Pet implements Persistable<Integer> {
   private Owner owner;
 
   @Transient
-  private List<Visit> visits = new ArrayList<>();
-
-  public void addVisit(Visit visit) {
-    visit.setPet(this);
-  }
+  private List<Visit> visits;
 
   public boolean isNew() {
     return this.id == null;

@@ -53,7 +53,7 @@ public interface OwnerRepository extends ReactiveSortingRepository<Owner, Intege
             .map(result -> {
               List<Pet> pets = result.stream()
                   .map(row -> {
-                    PetType type = PetType.builder()
+                    PetType petType = PetType.builder()
                         .id((Integer) row.get("type_id"))
                         .name((String) row.get("type_name"))
                         .build();
@@ -61,7 +61,7 @@ public interface OwnerRepository extends ReactiveSortingRepository<Owner, Intege
                         .id((Integer) row.get("pet_id"))
                         .name((String) row.get("name"))
                         .birthDate((LocalDate) row.get("birth_date"))
-                        .type(type)
+                        .type(petType)
                         .build();
                   }).toList();
 
