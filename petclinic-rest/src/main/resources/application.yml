@@ -1,0 +1,41 @@
+spring:
+  profiles:
+    active: local
+  messages:
+    basename: messages/messages
+  jpa:
+    open-in-view: false
+server:
+  port: 9966
+  servlet:
+    context-path: /petclinic/
+petclinic:
+  security:
+    enable: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath*:db/postgresql/initDB.sql
+      data-locations: classpath*:db/postgresql/populateDB.sql
+  datasource:
+    url: jdbc:postgresql://localhost:5432/petclinic
+    username: postgres
+    password: petclinic
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mock
