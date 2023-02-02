@@ -2,7 +2,10 @@ package com.example.petclinic.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -14,6 +17,9 @@ import org.springframework.data.relational.core.mapping.Table;
 @Getter
 @Setter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table("users")
 public class User implements Persistable<String> {
 
