@@ -25,7 +25,10 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Visit implements Persistable<Integer> {
 
     @Id
-    protected Integer id;
+    private Integer id;
+
+    @Column("pet_id")
+    private Integer petId;
 
     @Column("visit_date")
     @CreatedDate

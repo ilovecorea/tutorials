@@ -24,12 +24,12 @@ public class Role implements Persistable<Integer> {
     @Id
     protected Integer id;
 
+    @Column("role")
+    private String name;
+
     @Transient
     @ToString.Exclude
     private User user;
-
-    @Column("role")
-    private String name;
 
     public boolean isNew() {
         return this.id == null;

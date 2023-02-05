@@ -1,7 +1,6 @@
 package com.example.petclinic.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -26,7 +25,7 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Pet implements Persistable<Integer> {
 
   @Id
-  protected Integer id;
+  private Integer id;
 
   @Column("name")
   @NotEmpty
@@ -34,6 +33,14 @@ public class Pet implements Persistable<Integer> {
 
   @Column("birth_date")
   private LocalDate birthDate;
+
+  @NotEmpty
+  @Column("type_id")
+  private Integer typeId;
+
+  @NotEmpty
+  @Column("owner_id")
+  private Integer ownerId;
 
   @Transient
   private PetType type;
@@ -44,6 +51,17 @@ public class Pet implements Persistable<Integer> {
 
   @Transient
   private List<Visit> visits;
+
+  public Pet setType(PetType type) {
+    this.type = type;
+    this.setTypeId(type.getId());
+    return this;
+  }
+
+  public void setOwner(Owner owner) {
+    this.owner = owner;
+    this.setOwnerId(owner.getId());
+  }
 
   public boolean isNew() {
     return this.id == null;

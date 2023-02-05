@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Getter
@@ -24,8 +23,6 @@ public class PetType implements Persistable<Integer> {
   @Id
   protected Integer id;
 
-  @Column("name")
-  @NotEmpty
   private String name;
 
   public boolean isNew() {

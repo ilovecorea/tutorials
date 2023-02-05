@@ -2,8 +2,6 @@ package com.example.petclinic.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +13,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import reactor.core.publisher.Flux;
 
 @Getter
 @Setter
@@ -26,27 +25,16 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Owner implements Persistable<Integer> {
 
   @Id
-  protected Integer id;
+  private Integer id;
 
-  @Column("first_name")
-  @NotEmpty
-  protected String firstName;
+  private String firstName;
 
-  @Column("last_name")
-  @NotEmpty
-  protected String lastName;
+  private String lastName;
 
-  @Column("address")
-  @NotEmpty
   private String address;
 
-  @Column("city")
-  @NotEmpty
   private String city;
 
-  @Column("telephone")
-  @NotEmpty
-  @Digits(fraction = 0, integer = 10)
   private String telephone;
 
   @Transient
@@ -54,5 +42,13 @@ public class Owner implements Persistable<Integer> {
 
   public boolean isNew() {
     return this.id == null;
+  }
+
+  public Owner addPet(Pet pet) {
+    if (pets == null) {
+      pets = new ArrayList<>();
+    }
+    pets.add(pet);
+    return this;
   }
 }

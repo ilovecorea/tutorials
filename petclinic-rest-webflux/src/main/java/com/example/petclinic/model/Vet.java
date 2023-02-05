@@ -25,15 +25,15 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Vet implements Persistable<Integer> {
 
     @Id
-    protected Integer id;
+    private Integer id;
 
     @Column("first_name")
     @NotEmpty
-    protected String firstName;
+    private String firstName;
 
     @Column("last_name")
     @NotEmpty
-    protected String lastName;
+    private String lastName;
 
     @Transient
     private List<Specialty> specialties;
