@@ -1,6 +1,7 @@
 package com.example.petclinic.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -67,4 +68,10 @@ public class Pet implements Persistable<Integer> {
     return this.id == null;
   }
 
+  public void addVisit(Visit visit) {
+    if (visits == null) {
+      visits = new ArrayList<>();
+    }
+    visits.add(visit);
+  }
 }

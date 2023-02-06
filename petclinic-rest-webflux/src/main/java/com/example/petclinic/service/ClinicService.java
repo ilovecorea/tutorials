@@ -14,6 +14,8 @@ import com.example.petclinic.repository.VetRepository;
 import com.example.petclinic.repository.VisitRepository;
 import com.example.petclinic.rest.dto.OwnerDto;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -66,12 +68,12 @@ public class ClinicService {
   }
 
   public Mono<Visit> findVisitById(int visitId) {
-    return visitRepository.findById(visitId)
+    return visitRepository.findById(databaseClient, visitId)
         .switchIfEmpty(Mono.error(new EmptyResultDataAccessException("Visit for " + visitId, 1)));
   }
 
   public Flux<Visit> findAllVisits() {
-    return visitRepository.findAll()
+    return visitRepository.findAll(databaseClient)
         .onErrorResume(e -> Flux.error(new DataServiceException("findAllVisits", e)));
   }
 
@@ -108,7 +110,17 @@ public class ClinicService {
 
   @Transactional
   public Mono<Void> deleteOwner(Owner owner) {
-    return ownerRepository.delete(owner)
+    return petRepository.findByOwnerId(owner.getId())
+        .collectList()
+        .flatMap(pets -> {
+          log.debug("## pets:{}", pets);
+          if (pets != null && !pets.isEmpty()) {
+            return petRepository.deleteAll(pets)
+                .then(Mono.defer(() -> ownerRepository.delete(owner)));
+          } else {
+            return ownerRepository.delete(owner);
+          }
+        })
         .onErrorResume(e -> Mono.error(new DataServiceException("deleteOwner", e)));
   }
 
@@ -131,7 +143,21 @@ public class ClinicService {
 
   @Transactional
   public Mono<Void> deletePetType(PetType petType) {
-    return petTypeRepository.delete(petType)
+    return petRepository.findByTypeId(petType.getId())
+        .collectList()
+        .flatMap(pets -> {
+          log.debug("## pets:{}", pets);
+          if (pets != null && !pets.isEmpty()) {
+            return visitRepository.deleteByPetIdIn(
+                    pets.stream()
+                        .map(pet -> pet.getId())
+                        .collect(Collectors.toSet()))
+                .then(Mono.defer(() -> petRepository.deleteAll(pets)))
+                .then(Mono.defer(() -> petTypeRepository.delete(petType)));
+          } else {
+            return petTypeRepository.delete(petType);
+          }
+        })
         .onErrorResume(e -> Mono.error(new DataServiceException("deletePetType", e)));
   }
 
@@ -165,7 +191,7 @@ public class ClinicService {
 
   public Mono<Owner> findOwnerById(int id) {
     return ownerRepository.findById(id)
-        .flatMap(owner -> petRepository.findWithTypeByOwnerId(databaseClient, id)
+        .flatMap(owner -> petRepository.findByOwnerId(databaseClient, id)
             .collectList()
             .map(pets -> {
               owner.setPets(pets);
@@ -175,14 +201,26 @@ public class ClinicService {
   }
 
   public Mono<Pet> findPetById(int id) {
-    return petRepository.findById(id)
+    return petRepository.findById(databaseClient, id)
+        .flatMap(pet -> visitRepository.findByPetId(pet.getId())
+            .collectList()
+            .map(visits -> {
+              pet.setVisits(visits);
+              return pet;
+            }))
         .switchIfEmpty(Mono.error(new EmptyResultDataAccessException("pet for " + id, 1)));
   }
 
   @Transactional
   public Mono<Pet> savePet(Pet pet) {
-    return petRepository.save(pet)
-        .onErrorResume(e -> Mono.error(new DataServiceException("savePet", e)));
+    if (pet.getVisits() == null) {
+      return petRepository.save(pet)
+          .onErrorResume(e -> Mono.error(new DataServiceException("savePet", e)));
+    } else {
+      return visitRepository.saveAll(pet.getVisits())
+          .then(petRepository.save(pet))
+          .onErrorResume(e -> Mono.error(new DataServiceException("savePet", e)));
+    }
   }
 
 
@@ -199,12 +237,18 @@ public class ClinicService {
 
   @Transactional
   public Mono<Owner> saveOwner(Owner owner) {
+    Objects.requireNonNull(owner);
     if (log.isDebugEnabled()) {
       log.debug("owner:{}", owner);
     }
-    return petRepository.saveAll(owner.getPets())
-        .then(ownerRepository.save(owner))
-        .onErrorResume(e -> Mono.error(new DataServiceException("saveOwner", e)));
+    if (owner.getPets() != null) {
+      return petRepository.saveAll(owner.getPets())
+          .then(ownerRepository.save(owner))
+          .onErrorResume(e -> Mono.error(new DataServiceException("saveOwner", e)));
+    } else {
+      return ownerRepository.save(owner)
+          .onErrorResume(e -> Mono.error(new DataServiceException("saveOwner", e)));
+    }
   }
 
   public Flux<Owner> findOwnerByLastName(String lastName) {
@@ -213,7 +257,7 @@ public class ClinicService {
   }
 
   public Flux<Visit> findVisitsByPetId(int petId) {
-    return visitRepository.findByPetId(petId)
+    return visitRepository.findByPetId(databaseClient, petId)
         .onErrorResume(e -> Flux.error(new DataServiceException("findVisitsByPetId", e)));
   }
 

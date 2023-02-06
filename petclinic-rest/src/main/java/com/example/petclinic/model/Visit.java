@@ -12,6 +12,7 @@ import javax.validation.constraints.NotEmpty;
 @Table(name = "visits")
 public class Visit extends BaseEntity {
 
+
     /**
      * Holds value of property date.
      */
