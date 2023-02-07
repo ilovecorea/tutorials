@@ -5,7 +5,6 @@ import com.example.petclinic.model.Pet;
 import com.example.petclinic.rest.api.PetsApi;
 import com.example.petclinic.rest.dto.PetDto;
 import com.example.petclinic.service.ClinicService;
-import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.http.HttpStatus;

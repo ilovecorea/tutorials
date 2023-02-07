@@ -28,9 +28,3 @@ spring:
     username: postgres
     password: petclinic
     name: petclinic
-
----
-spring:
-  config:
-    activate:
-      on-profile: mock

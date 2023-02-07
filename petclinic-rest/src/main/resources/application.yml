@@ -38,4 +38,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: mock
+      on-profile: debug
+logging:
+  level:
+    root: debug

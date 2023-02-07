@@ -14,12 +14,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @ConditionalOnProperty(name = "petclinic.security.enable", havingValue = "true")
 public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private DataSource dataSource;
+  @Autowired
+  private DataSource dataSource;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    // @formatter:off
         http
             .authorizeRequests()
                 .anyRequest()
@@ -30,16 +30,16 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                     .disable();
         // @formatter:on
-    }
+  }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // @formatter:off
+  @Autowired
+  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    // @formatter:off
         auth
             .jdbcAuthentication()
                 .dataSource(dataSource)
                 .usersByUsernameQuery("select username,password,enabled from users where username=?")
                 .authoritiesByUsernameQuery("select username,role from roles where username=?");
         // @formatter:on
-    }
+  }
 }

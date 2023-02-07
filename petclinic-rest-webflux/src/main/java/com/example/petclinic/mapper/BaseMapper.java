@@ -5,8 +5,8 @@ package com.example.petclinic.mapper;
  */
 public interface BaseMapper<M, D> {
 
-  M toModel(D data);
+  M toModel(D dto);
 
-  D toData(M model);
+  D toDto(M model);
 
 }
