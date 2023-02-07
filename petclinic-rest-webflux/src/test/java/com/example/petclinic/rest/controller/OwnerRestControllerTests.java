@@ -2,6 +2,12 @@ package com.example.petclinic.rest.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.petclinic.mapper.OwnerMapper;
 import com.example.petclinic.mapper.OwnerMapperImpl;
@@ -245,11 +251,65 @@ public class OwnerRestControllerTests {
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
     webTestClient.post().uri("/api/owners/")
-        .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .body(Mono.just(newOwnerAsJSON), String.class)
         .exchange()
         .expectStatus().isCreated();
+  }
+
+  @Test
+  @WithMockUser(roles = "OWNER_ADMIN")
+  void testCreateOwnerError() throws Exception {
+    OwnerDto newOwnerDto = owners.get(0);
+    newOwnerDto.setId(null);
+    newOwnerDto.setFirstName(null);
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
+    webTestClient.post().uri("/api/owners/")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Mono.just(newOwnerAsJSON), String.class)
+        .exchange()
+        .expectStatus().isBadRequest();
+  }
+
+  @Test
+  @WithMockUser(roles = "OWNER_ADMIN")
+  void testUpdateOwnerSuccess() throws Exception {
+    given(this.clinicService.findOwnerById(1))
+        .willReturn(Mono.just(ownerMapper.toOwner(owners.get(0))));
+
+    int ownerId = owners.get(0).getId();
+    OwnerDto updatedOwnerDto = new OwnerDto();
+    updatedOwnerDto.setId(ownerId);
+    updatedOwnerDto.setFirstName("GeorgeI");
+    updatedOwnerDto.setLastName("Franklin");
+    updatedOwnerDto.setAddress("110 W. Liberty St.");
+    updatedOwnerDto.setCity("Madison");
+    updatedOwnerDto.setTelephone("6085551023");
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    String newOwnerAsJSON = mapper.writeValueAsString(updatedOwnerDto);
+    webTestClient.put().uri("/api/owners/" + ownerId)
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Mono.just(newOwnerAsJSON), String.class)
+        .exchange()
+        .expectStatus().isNoContent();
+
+    webTestClient.get().uri("/api/owners/" + ownerId)
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus().isOk()
+        .expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
+        .expectBody()
+        .jsonPath("$.id").isEqualTo(ownerId)
+        .jsonPath("$.firstName").isEqualTo("GeorgeI")
+        .consumeWith(System.out::println);
+
   }
 }

@@ -4,6 +4,8 @@ import com.example.petclinic.mapper.OwnerMapper;
 import com.example.petclinic.mapper.PetMapper;
 import com.example.petclinic.mapper.VisitMapper;
 import com.example.petclinic.model.Owner;
+import com.example.petclinic.model.Pet;
+import com.example.petclinic.model.Visit;
 import com.example.petclinic.rest.api.OwnersApi;
 import com.example.petclinic.rest.dto.OwnerDto;
 import com.example.petclinic.rest.dto.OwnerFieldsDto;
@@ -75,6 +77,7 @@ public class OwnerRestController implements OwnersApi {
   }
 
   @Override
+  @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
   public Mono<ResponseEntity<OwnerDto>> addOwner(Mono<OwnerFieldsDto> ownerFieldsDto,
       ServerWebExchange exchange) {
     return ownerFieldsDto.flatMap(dto -> {
@@ -85,33 +88,71 @@ public class OwnerRestController implements OwnersApi {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(UriComponentsBuilder.newInstance()
                 .path("/api/owners/{id}").buildAndExpand(newOwner.getId()).toUri());
-            return new ResponseEntity<>(ownerMapper.toOwnerDto(newOwner), headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(ownerMapper.toOwnerDto(newOwner), headers,
+                HttpStatus.CREATED);
           })
           .onErrorResume(e -> Mono.just(ResponseEntity.badRequest().build()));
     });
   }
 
   @Override
+  @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
   public Mono<ResponseEntity<OwnerDto>> updateOwner(Integer ownerId,
       Mono<OwnerFieldsDto> ownerFieldsDto, ServerWebExchange exchange) {
-    return OwnersApi.super.updateOwner(ownerId, ownerFieldsDto, exchange);
+    return this.clinicService.findOwnerById(ownerId)
+        .switchIfEmpty(Mono.error(new EmptyResultDataAccessException(1)))
+        .flatMap(owner -> ownerFieldsDto.flatMap(dto -> {
+          owner.setAddress(dto.getAddress());
+          owner.setCity(dto.getCity());
+          owner.setFirstName(dto.getFirstName());
+          owner.setLastName(dto.getLastName());
+          owner.setTelephone(dto.getTelephone());
+          return this.clinicService.saveOwner(owner);
+        }))
+        .map(owner -> new ResponseEntity<>(ownerMapper.toOwnerDto(owner), HttpStatus.NO_CONTENT));
   }
 
   @Override
+  @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
   public Mono<ResponseEntity<OwnerDto>> deleteOwner(Integer ownerId,
       ServerWebExchange exchange) {
-    return OwnersApi.super.deleteOwner(ownerId, exchange);
+    return this.clinicService.findOwnerById(ownerId)
+        .switchIfEmpty(Mono.error(new EmptyResultDataAccessException(1)))
+        .map(owner -> {
+          this.clinicService.deleteOwner(owner);
+          return new ResponseEntity(ownerMapper.toOwnerDto(owner), HttpStatus.NO_CONTENT);
+        });
   }
 
   @Override
+  @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
   public Mono<ResponseEntity<PetDto>> addPetToOwner(Integer ownerId,
       Mono<PetFieldsDto> petFieldsDto, ServerWebExchange exchange) {
-    return OwnersApi.super.addPetToOwner(ownerId, petFieldsDto, exchange);
+    return petFieldsDto.flatMap(dto -> {
+      Pet pet = petMapper.toPet(dto);
+      pet.setOwnerId(ownerId);
+      return this.clinicService.savePet(pet);
+    }).map(pet -> {
+      HttpHeaders headers = new HttpHeaders();
+      headers.setLocation(UriComponentsBuilder.newInstance().path("/api/pets/{id}")
+          .buildAndExpand(pet.getId()).toUri());
+      return new ResponseEntity<>(petMapper.toPetDto(pet), HttpStatus.CREATED);
+    }).onErrorResume(e -> Mono.just(ResponseEntity.badRequest().build()));
   }
 
   @Override
+  @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
   public Mono<ResponseEntity<VisitDto>> addVisitToOwner(Integer ownerId, Integer petId,
       Mono<VisitFieldsDto> visitFieldsDto, ServerWebExchange exchange) {
-    return OwnersApi.super.addVisitToOwner(ownerId, petId, visitFieldsDto, exchange);
+    return visitFieldsDto.flatMap(dto -> {
+      Visit visit = visitMapper.toVisit(dto);
+      visit.setPetId(petId);
+      return this.clinicService.saveVisit(visit);
+    }).map(visit -> {
+      HttpHeaders headers = new HttpHeaders();
+      headers.setLocation(UriComponentsBuilder.newInstance().path("/api/visits/{id}")
+          .buildAndExpand(visit.getId()).toUri());
+      return new ResponseEntity(visitMapper.toVisitDto(visit), HttpStatus.CREATED);
+    });
   }
 }
