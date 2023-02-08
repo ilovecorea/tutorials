@@ -2,6 +2,7 @@ package com.example.petclinic.rest.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -11,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.petclinic.mapper.OwnerMapper;
 import com.example.petclinic.mapper.OwnerMapperImpl;
+import com.example.petclinic.mapper.PetMapper;
 import com.example.petclinic.mapper.PetMapperImpl;
 import com.example.petclinic.mapper.VisitMapper;
 import com.example.petclinic.mapper.VisitMapperImpl;
@@ -25,6 +27,7 @@ import com.example.petclinic.service.ClinicService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -68,6 +72,9 @@ public class OwnerRestControllerTests {
 
   @Autowired
   private VisitMapper visitMapper;
+
+  @Autowired
+  private PetMapper petMapper;
 
   @MockBean
   private ClinicService clinicService;
@@ -168,7 +175,9 @@ public class OwnerRestControllerTests {
     webTestClient.get().uri("/api/owners/2")
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
-        .expectStatus().isNotFound();
+        .expectStatus().isNotFound()
+        .expectBody()
+        .consumeWith(System.out::println);
   }
 
   @Test
@@ -201,7 +210,9 @@ public class OwnerRestControllerTests {
     webTestClient.get().uri("/api/owners/?lastName=0")
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
-        .expectStatus().isNotFound();
+        .expectStatus().isNotFound()
+        .expectBody()
+        .consumeWith(System.out::println);
   }
 
   @Test
@@ -233,7 +244,9 @@ public class OwnerRestControllerTests {
     webTestClient.get().uri("/api/owners/")
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
-        .expectStatus().isNotFound();
+        .expectStatus().isNotFound()
+        .expectBody()
+        .consumeWith(System.out::println);
   }
 
   @Test
@@ -255,7 +268,9 @@ public class OwnerRestControllerTests {
         .contentType(MediaType.APPLICATION_JSON)
         .body(Mono.just(newOwnerAsJSON), String.class)
         .exchange()
-        .expectStatus().isCreated();
+        .expectStatus().isCreated()
+        .expectBody()
+        .consumeWith(System.out::println);
   }
 
   @Test
@@ -273,7 +288,9 @@ public class OwnerRestControllerTests {
         .contentType(MediaType.APPLICATION_JSON)
         .body(Mono.just(newOwnerAsJSON), String.class)
         .exchange()
-        .expectStatus().isBadRequest();
+        .expectStatus().isBadRequest()
+        .expectBody()
+        .consumeWith(System.out::println);
   }
 
   @Test
@@ -311,5 +328,157 @@ public class OwnerRestControllerTests {
         .jsonPath("$.firstName").isEqualTo("GeorgeI")
         .consumeWith(System.out::println);
 
+  }
+
+  @Test
+  @WithMockUser(roles = "OWNER_ADMIN")
+  void testUpdateOwnerSuccessNoBodyId() throws Exception {
+    given(this.clinicService.findOwnerById(1))
+        .willReturn(Mono.just(ownerMapper.toOwner(owners.get(0))));
+    int ownerId = owners.get(0).getId();
+    OwnerDto updatedOwnerDto = new OwnerDto();
+    updatedOwnerDto.setFirstName("GeorgeI");
+    updatedOwnerDto.setLastName("Franklin");
+    updatedOwnerDto.setAddress("110 W. Liberty St.");
+    updatedOwnerDto.setCity("Madison");
+
+    updatedOwnerDto.setTelephone("6085551023");
+    ObjectMapper mapper = new ObjectMapper();
+    String newOwnerAsJSON = mapper.writeValueAsString(updatedOwnerDto);
+    webTestClient.put().uri("/api/owners/" + ownerId)
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Mono.just(newOwnerAsJSON), String.class)
+        .exchange()
+        .expectStatus().isNoContent();
+
+    webTestClient.get().uri("/api/owners/" + ownerId)
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody()
+        .jsonPath("$.id").isEqualTo(ownerId)
+        .jsonPath("$.firstName").isEqualTo("GeorgeI")
+        .consumeWith(System.out::println);
+  }
+
+  @Test
+  @WithMockUser(roles = "OWNER_ADMIN")
+  void testUpdateOwnerError() throws Exception {
+    given(this.clinicService.findOwnerById(1))
+        .willReturn(Mono.just(ownerMapper.toOwner(owners.get(0))));
+
+    OwnerDto newOwnerDto = owners.get(0);
+    newOwnerDto.setFirstName("");
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
+    webTestClient.put().uri("/api/owners/1")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Mono.just(newOwnerAsJSON), String.class)
+        .exchange()
+        .expectStatus().isBadRequest()
+        .expectBody()
+        .consumeWith(System.out::println);
+  }
+
+  @Test
+  @WithMockUser(roles = "OWNER_ADMIN")
+  void testDeleteOwnerSuccess() throws Exception {
+    OwnerDto newOwnerDto = owners.get(0);
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
+    final Owner owner = ownerMapper.toOwner(owners.get(0));
+    given(this.clinicService.findOwnerById(1))
+        .willReturn(Mono.just(owner));
+    webTestClient.delete().uri("/api/owners/1")
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus().isNoContent()
+        .expectBody()
+        .consumeWith(System.out::println);
+  }
+
+  @Test
+  @WithMockUser(roles = "OWNER_ADMIN")
+  void testDeleteOwnerError() throws Exception {
+    OwnerDto newOwnerDto = owners.get(0);
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
+    given(this.clinicService.findOwnerById(999))
+        .willReturn(Mono.empty());
+    webTestClient.delete().uri("/api/owners/999")
+        .exchange()
+        .expectStatus().isNotFound()
+        .expectBody()
+        .consumeWith(System.out::println);
+  }
+
+  @Test
+  @WithMockUser(roles = "OWNER_ADMIN")
+  void testCreatePetSuccess() throws Exception {
+    PetDto newPet = pets.get(0);
+    newPet.setId(999);
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    String newPetAsJSON = mapper.writeValueAsString(newPet);
+    log.debug("newPetAsJSON:{}", newPetAsJSON);
+    given(this.clinicService.savePet(any()))
+        .willReturn(Mono.just(petMapper.toPet(newPet)));
+    webTestClient.post().uri("/api/owners/1/pets/")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Mono.just(newPetAsJSON), String.class)
+        .exchange()
+        .expectStatus().isCreated()
+        .expectBody()
+        .consumeWith(System.out::println);
+  }
+
+  @Test
+  @WithMockUser(roles = "OWNER_ADMIN")
+  void testCreatePetError() throws Exception {
+    PetDto newPet = pets.get(0);
+    newPet.setId(null);
+    newPet.setName(null);
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    mapper.registerModule(new JavaTimeModule());
+    String newPetAsJSON = mapper.writeValueAsString(newPet);
+
+    webTestClient.post().uri("/api/owners/1/pets/")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Mono.just(newPetAsJSON), String.class)
+        .exchange()
+        .expectStatus().isBadRequest()
+        .expectBody()
+        .consumeWith(System.out::println);
+  }
+
+  @Test
+  @WithMockUser(roles="OWNER_ADMIN")
+  void testCreateVisitSuccess() throws Exception {
+    VisitDto newVisit = visits.get(0);
+    newVisit.setId(999);
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisit(newVisit));
+    log.debug("newVisitAsJSON:{}", newVisitAsJSON);
+    webTestClient.post().uri("/api/owners/1/pets/1/visits")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Mono.just(newVisitAsJSON), String.class)
+        .exchange()
+        .expectStatus().isCreated()
+        .expectBody()
+        .consumeWith(System.out::println);
   }
 }

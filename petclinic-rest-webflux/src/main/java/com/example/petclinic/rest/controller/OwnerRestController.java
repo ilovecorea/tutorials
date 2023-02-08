@@ -14,7 +14,7 @@ import com.example.petclinic.rest.dto.PetFieldsDto;
 import com.example.petclinic.rest.dto.VisitDto;
 import com.example.petclinic.rest.dto.VisitFieldsDto;
 import com.example.petclinic.service.ClinicService;
-import java.util.concurrent.atomic.AtomicReference;
+import com.example.petclinic.service.DataServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -85,13 +85,9 @@ public class OwnerRestController implements OwnersApi {
       log.debug("owner:{}", owner);
       return this.clinicService.saveOwner(owner)
           .map(newOwner -> {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(UriComponentsBuilder.newInstance()
-                .path("/api/owners/{id}").buildAndExpand(newOwner.getId()).toUri());
-            return new ResponseEntity<>(ownerMapper.toOwnerDto(newOwner), headers,
-                HttpStatus.CREATED);
-          })
-          .onErrorResume(e -> Mono.just(ResponseEntity.badRequest().build()));
+            return ResponseEntity.created(UriComponentsBuilder.newInstance()
+                .path("/api/owners/{id}").buildAndExpand(newOwner.getId()).toUri()).build();
+          });
     });
   }
 
@@ -107,9 +103,14 @@ public class OwnerRestController implements OwnersApi {
           owner.setFirstName(dto.getFirstName());
           owner.setLastName(dto.getLastName());
           owner.setTelephone(dto.getTelephone());
-          return this.clinicService.saveOwner(owner);
-        }))
-        .map(owner -> new ResponseEntity<>(ownerMapper.toOwnerDto(owner), HttpStatus.NO_CONTENT));
+          //owner만 저장한다.
+          owner.setPets(null);
+          Mono<Owner> savedOwner = this.clinicService.saveOwner(owner);
+          if (log.isDebugEnabled()) {
+            log.debug("## savedOwner:{}", savedOwner);
+          }
+          return Mono.just(ResponseEntity.noContent().build());
+        }));
   }
 
   @Override
@@ -120,7 +121,7 @@ public class OwnerRestController implements OwnersApi {
         .switchIfEmpty(Mono.error(new EmptyResultDataAccessException(1)))
         .map(owner -> {
           this.clinicService.deleteOwner(owner);
-          return new ResponseEntity(ownerMapper.toOwnerDto(owner), HttpStatus.NO_CONTENT);
+          return ResponseEntity.noContent().build();
         });
   }
 
@@ -131,13 +132,11 @@ public class OwnerRestController implements OwnersApi {
     return petFieldsDto.flatMap(dto -> {
       Pet pet = petMapper.toPet(dto);
       pet.setOwnerId(ownerId);
-      return this.clinicService.savePet(pet);
-    }).map(pet -> {
-      HttpHeaders headers = new HttpHeaders();
-      headers.setLocation(UriComponentsBuilder.newInstance().path("/api/pets/{id}")
-          .buildAndExpand(pet.getId()).toUri());
-      return new ResponseEntity<>(petMapper.toPetDto(pet), HttpStatus.CREATED);
-    }).onErrorResume(e -> Mono.just(ResponseEntity.badRequest().build()));
+      this.clinicService.savePet(pet);
+      return Mono.just(ResponseEntity.created(
+          UriComponentsBuilder.newInstance().path("/api/pets/{id}")
+              .buildAndExpand(pet.getId()).toUri()).build());
+    });
   }
 
   @Override
@@ -147,12 +146,10 @@ public class OwnerRestController implements OwnersApi {
     return visitFieldsDto.flatMap(dto -> {
       Visit visit = visitMapper.toVisit(dto);
       visit.setPetId(petId);
-      return this.clinicService.saveVisit(visit);
-    }).map(visit -> {
-      HttpHeaders headers = new HttpHeaders();
-      headers.setLocation(UriComponentsBuilder.newInstance().path("/api/visits/{id}")
-          .buildAndExpand(visit.getId()).toUri());
-      return new ResponseEntity(visitMapper.toVisitDto(visit), HttpStatus.CREATED);
+      this.clinicService.saveVisit(visit);
+      return Mono.just(ResponseEntity.created(
+          UriComponentsBuilder.newInstance().path("/api/visits/{id}")
+              .buildAndExpand(visit.getId()).toUri()).build());
     });
   }
 }

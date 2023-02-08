@@ -9,6 +9,7 @@ import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.reactive.function.server.ServerRequest;
 
 @Component
@@ -28,7 +29,7 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
       map.put("status", HttpStatus.NOT_FOUND.value());
     } else {
       map.put("status", HttpStatus.BAD_REQUEST.value());
-      map.put("message", throwable.getLocalizedMessage());
+      map.put("message", throwable.getMessage());
     }
 
     return map;
