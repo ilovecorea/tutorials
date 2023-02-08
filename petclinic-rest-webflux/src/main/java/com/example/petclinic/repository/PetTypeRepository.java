@@ -2,7 +2,6 @@ package com.example.petclinic.repository;
 
 import com.example.petclinic.model.PetType;
 import java.util.Set;
-import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;

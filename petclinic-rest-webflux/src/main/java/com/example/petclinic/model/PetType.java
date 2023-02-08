@@ -1,6 +1,5 @@
 package com.example.petclinic.model;
 
-import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
