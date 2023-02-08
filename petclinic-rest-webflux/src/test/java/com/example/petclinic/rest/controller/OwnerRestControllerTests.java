@@ -1,6 +1,7 @@
 package com.example.petclinic.rest.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 
 import com.example.petclinic.mapper.OwnerMapper;
@@ -246,10 +247,10 @@ public class OwnerRestControllerTests {
   void testCreateOwnerSuccess() throws Exception {
     OwnerDto newOwnerDto = owners.get(0);
     newOwnerDto.setId(null);
-    Owner result = ownerMapper.toOwner(newOwnerDto);
-    result.setId(5);
+    Owner owner = ownerMapper.toOwner(newOwnerDto);
+    owner.setId(5);
     given(this.clinicService.saveOwner(any()))
-        .willReturn(Mono.just(result));
+        .willReturn(Mono.just(owner));
 
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JavaTimeModule());
@@ -288,9 +289,6 @@ public class OwnerRestControllerTests {
   @Test
   @WithMockUser(roles = "OWNER_ADMIN")
   void testUpdateOwnerSuccess() throws Exception {
-    given(this.clinicService.findOwnerById(1))
-        .willReturn(Mono.just(ownerMapper.toOwner(owners.get(0))));
-
     int ownerId = owners.get(0).getId();
     OwnerDto updatedOwnerDto = new OwnerDto();
     updatedOwnerDto.setId(ownerId);
@@ -303,6 +301,12 @@ public class OwnerRestControllerTests {
     mapper.registerModule(new JavaTimeModule());
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     String newOwnerAsJSON = mapper.writeValueAsString(updatedOwnerDto);
+
+    given(this.clinicService.findOwnerById(1))
+        .willReturn(Mono.just(ownerMapper.toOwner(owners.get(0))));
+    given(this.clinicService.saveOwner(any()))
+        .willReturn(Mono.just(ownerMapper.toOwner(updatedOwnerDto)));
+
     webTestClient.put().uri("/api/owners/" + ownerId)
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
@@ -325,18 +329,21 @@ public class OwnerRestControllerTests {
   @Test
   @WithMockUser(roles = "OWNER_ADMIN")
   void testUpdateOwnerSuccessNoBodyId() throws Exception {
-    given(this.clinicService.findOwnerById(1))
-        .willReturn(Mono.just(ownerMapper.toOwner(owners.get(0))));
     int ownerId = owners.get(0).getId();
     OwnerDto updatedOwnerDto = new OwnerDto();
     updatedOwnerDto.setFirstName("GeorgeI");
     updatedOwnerDto.setLastName("Franklin");
     updatedOwnerDto.setAddress("110 W. Liberty St.");
     updatedOwnerDto.setCity("Madison");
-
     updatedOwnerDto.setTelephone("6085551023");
     ObjectMapper mapper = new ObjectMapper();
     String newOwnerAsJSON = mapper.writeValueAsString(updatedOwnerDto);
+
+    given(this.clinicService.findOwnerById(1))
+        .willReturn(Mono.just(ownerMapper.toOwner(owners.get(0))));
+    given(this.clinicService.saveOwner(any()))
+        .willReturn(Mono.just(ownerMapper.toOwner(updatedOwnerDto)));
+
     webTestClient.put().uri("/api/owners/" + ownerId)
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
@@ -378,13 +385,11 @@ public class OwnerRestControllerTests {
   @Test
   @WithMockUser(roles = "OWNER_ADMIN")
   void testDeleteOwnerSuccess() throws Exception {
-    OwnerDto newOwnerDto = owners.get(0);
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.registerModule(new JavaTimeModule());
-    String newOwnerAsJSON = mapper.writeValueAsString(newOwnerDto);
     final Owner owner = ownerMapper.toOwner(owners.get(0));
     given(this.clinicService.findOwnerById(1))
         .willReturn(Mono.just(owner));
+    given(this.clinicService.deleteOwner(owner))
+        .willReturn(Mono.empty());
     webTestClient.delete().uri("/api/owners/1")
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
@@ -420,8 +425,10 @@ public class OwnerRestControllerTests {
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     String newPetAsJSON = mapper.writeValueAsString(newPet);
     log.debug("newPetAsJSON:{}", newPetAsJSON);
+
     given(this.clinicService.savePet(any()))
         .willReturn(Mono.just(petMapper.toPet(newPet)));
+
     webTestClient.post().uri("/api/owners/1/pets/")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
@@ -463,7 +470,10 @@ public class OwnerRestControllerTests {
     mapper.registerModule(new JavaTimeModule());
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     String newVisitAsJSON = mapper.writeValueAsString(visitMapper.toVisit(newVisit));
-    log.debug("newVisitAsJSON:{}", newVisitAsJSON);
+
+    given(this.clinicService.saveVisit(any()))
+        .willReturn(Mono.just(visitMapper.toVisit(newVisit)));
+
     webTestClient.post().uri("/api/owners/1/pets/1/visits")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)

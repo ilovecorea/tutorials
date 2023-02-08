@@ -14,6 +14,7 @@ import com.example.petclinic.rest.dto.PetFieldsDto;
 import com.example.petclinic.rest.dto.VisitDto;
 import com.example.petclinic.rest.dto.VisitFieldsDto;
 import com.example.petclinic.service.ClinicService;
+import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -77,15 +77,9 @@ public class OwnerRestController implements OwnersApi {
   @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
   public Mono<ResponseEntity<OwnerDto>> addOwner(Mono<OwnerFieldsDto> ownerFieldsDto,
       ServerWebExchange exchange) {
-    return ownerFieldsDto.flatMap(dto -> {
-      Owner owner = ownerMapper.toOwner(dto);
-      log.debug("owner:{}", owner);
-      return this.clinicService.saveOwner(owner)
-          .map(newOwner -> {
-            return ResponseEntity.created(UriComponentsBuilder.newInstance()
-                .path("/api/owners/{id}").buildAndExpand(newOwner.getId()).toUri()).build();
-          });
-    });
+    return ownerFieldsDto.flatMap(dto -> this.clinicService.saveOwner(ownerMapper.toOwner(dto)))
+        .map(newOwner -> ResponseEntity.created(URI.create("/api/owners/" + newOwner.getId()))
+            .build());
   }
 
   @Override
@@ -100,14 +94,10 @@ public class OwnerRestController implements OwnersApi {
           owner.setFirstName(dto.getFirstName());
           owner.setLastName(dto.getLastName());
           owner.setTelephone(dto.getTelephone());
-          //owner만 저장한다.
           owner.setPets(null);
-          Mono<Owner> savedOwner = this.clinicService.saveOwner(owner);
-          if (log.isDebugEnabled()) {
-            log.debug("## savedOwner:{}", savedOwner);
-          }
-          return Mono.just(ResponseEntity.noContent().build());
-        }));
+          return this.clinicService.saveOwner(owner);
+        }))
+        .map(unused -> ResponseEntity.noContent().build());
   }
 
   @Override
@@ -116,24 +106,21 @@ public class OwnerRestController implements OwnersApi {
       ServerWebExchange exchange) {
     return this.clinicService.findOwnerById(ownerId)
         .switchIfEmpty(Mono.error(new EmptyResultDataAccessException(1)))
-        .map(owner -> {
-          this.clinicService.deleteOwner(owner);
-          return ResponseEntity.noContent().build();
-        });
+        .flatMap(owner -> this.clinicService.deleteOwner(owner))
+        .then(Mono.defer(() -> Mono.just(ResponseEntity.noContent().build())));
   }
 
   @Override
   @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
   public Mono<ResponseEntity<PetDto>> addPetToOwner(Integer ownerId,
       Mono<PetFieldsDto> petFieldsDto, ServerWebExchange exchange) {
-    return petFieldsDto.flatMap(dto -> {
-      Pet pet = petMapper.toPet(dto);
-      pet.setOwnerId(ownerId);
-      this.clinicService.savePet(pet);
-      return Mono.just(ResponseEntity.created(
-          UriComponentsBuilder.newInstance().path("/api/pets/{id}")
-              .buildAndExpand(pet.getId()).toUri()).build());
-    });
+    return petFieldsDto
+        .flatMap(dto -> {
+          Pet pet = petMapper.toPet(dto);
+          pet.setOwnerId(ownerId);
+          return this.clinicService.savePet(pet);
+        })
+        .map(pet -> ResponseEntity.created(URI.create("/api/pets/" + pet.getId())).build());
   }
 
   @Override
@@ -143,10 +130,7 @@ public class OwnerRestController implements OwnersApi {
     return visitFieldsDto.flatMap(dto -> {
       Visit visit = visitMapper.toVisit(dto);
       visit.setPetId(petId);
-      this.clinicService.saveVisit(visit);
-      return Mono.just(ResponseEntity.created(
-          UriComponentsBuilder.newInstance().path("/api/visits/{id}")
-              .buildAndExpand(visit.getId()).toUri()).build());
-    });
+      return this.clinicService.saveVisit(visit);
+    }).map(visit -> ResponseEntity.created(URI.create("/api/visits/" + visit.getId())).build());
   }
 }
