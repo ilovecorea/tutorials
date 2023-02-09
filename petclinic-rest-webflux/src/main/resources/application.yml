@@ -3,12 +3,12 @@ spring:
     active: local
   messages:
     basename: messages/messages
-  jpa:
-    open-in-view: false
+  webflux:
+    base-path: /petclinic/
 server:
   port: 9966
-  servlet:
-    context-path: /petclinic/
+#  servlet:
+#    context-path: /petclinic/
 petclinic:
   security:
     enable: false
@@ -28,3 +28,6 @@ spring:
     username: postgres
     password: petclinic
     name: petclinic
+logging:
+  level:
+    root: debug
