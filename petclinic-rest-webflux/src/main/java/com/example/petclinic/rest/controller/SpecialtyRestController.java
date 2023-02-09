@@ -8,7 +8,6 @@ import com.example.petclinic.service.ClinicService;
 import java.net.URI;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
@@ -16,7 +15,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("api")
 public class SpecialtyRestController implements SpecialtiesApi {
 

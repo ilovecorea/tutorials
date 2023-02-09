@@ -1,8 +1,6 @@
 package com.example.petclinic.rest.controller;
 
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
@@ -12,7 +10,6 @@ import reactor.core.publisher.Mono;
  */
 
 @RestController
-@CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("/")
 public class RootRestController {
 

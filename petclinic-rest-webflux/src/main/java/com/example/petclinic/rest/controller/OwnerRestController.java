@@ -15,12 +15,12 @@ import com.example.petclinic.rest.dto.VisitDto;
 import com.example.petclinic.rest.dto.VisitFieldsDto;
 import com.example.petclinic.service.ClinicService;
 import java.net.URI;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
@@ -28,7 +28,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("/api")
 public class OwnerRestController implements OwnersApi {
 
@@ -54,7 +53,7 @@ public class OwnerRestController implements OwnersApi {
   @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
   public Mono<ResponseEntity<Flux<OwnerDto>>> listOwners(String lastName,
       ServerWebExchange exchange) {
-    Flux<Owner> ownerDtoFlux = (lastName == null)
+    Flux<Owner> ownerDtoFlux = (StringUtils.isEmpty(lastName))
         ? this.clinicService.findAllOwners()
         : this.clinicService.findOwnerByLastName(lastName);
     return ownerDtoFlux

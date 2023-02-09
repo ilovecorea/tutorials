@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -165,7 +166,8 @@ class OwnerRestControllerTests {
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json"))
         .andExpect(jsonPath("$.id").value(1))
-        .andExpect(jsonPath("$.firstName").value("George"));
+        .andExpect(jsonPath("$.firstName").value("George"))
+        .andDo(print());
   }
 
   @Test
@@ -216,7 +218,8 @@ class OwnerRestControllerTests {
         .andExpect(jsonPath("$.[0].id").value(2))
         .andExpect(jsonPath("$.[0].firstName").value("Betty"))
         .andExpect(jsonPath("$.[1].id").value(4))
-        .andExpect(jsonPath("$.[1].firstName").value("Harold"));
+        .andExpect(jsonPath("$.[1].firstName").value("Harold"))
+        .andDo(print());
   }
 
   @Test
@@ -395,7 +398,7 @@ class OwnerRestControllerTests {
     this.mockMvc.perform(post("/api/owners/1/pets/")
             .content(newPetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE)
             .contentType(MediaType.APPLICATION_JSON_VALUE))
-        .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
+        .andExpect(status().isBadRequest()).andDo(print());
   }
 
   @Test
