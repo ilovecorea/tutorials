@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {PetType} from "../pettype";
 import {Router} from "@angular/router";
 import {PetTypeService} from "../pet-type.service";
+import {Specialty} from "../../specialties/specialty";
 
 @Component({
   selector: 'app-pettype-list',
@@ -27,11 +28,17 @@ export class PettypeListComponent implements OnInit {
   }
 
   deletePettype(pettype: PetType) {
-
+    this.petTypeService.deletePetType(pettype.id.toString()).subscribe(
+      response => {
+        this.responseStatus = response;
+        this.pettypes = this.pettypes.filter(currentItem => !(currentItem.id === pettype.id));
+      },
+      error => this.errorMessage = error as any);
   }
 
-  onNewPettype($event: any) {
-
+  onNewPettype(newPetType: Specialty) {
+    this.pettypes.push(newPetType);
+    this.showAddPettypeComponent();
   }
 
   showAddPettypeComponent() {

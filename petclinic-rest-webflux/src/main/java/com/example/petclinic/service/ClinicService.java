@@ -115,7 +115,7 @@ public class ClinicService {
   }
 
   public Flux<PetType> findAllPetTypes() {
-    return petTypeRepository.findAll();
+    return petTypeRepository.findAll(Sort.by("id"));
   }
 
   @Transactional

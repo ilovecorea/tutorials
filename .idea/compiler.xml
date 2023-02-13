@@ -7,6 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="petclinic-rest-vertx" />
       </profile>
       <profile name="Annotation profile for petclinic-rest" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -31,10 +32,6 @@
         <module name="petclinic-rest-webflux" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="petclinic-rest" target="17" />
-      <module name="petclinic-rest-webflux" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
