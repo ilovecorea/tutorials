@@ -3,6 +3,7 @@ package org.example.petclinic.persistence;
 import io.vertx.core.Future;
 import io.vertx.sqlclient.Pool;
 import java.util.List;
+import java.util.Optional;
 import org.example.petclinic.model.Vet;
 import org.example.petclinic.persistence.impl.VetPersistenceImpl;
 
@@ -12,7 +13,7 @@ public interface VetPersistence {
     return new VetPersistenceImpl(pool);
   }
 
-  Future<Vet> findById(Integer id);
+  Future<Optional<Vet>> findById(Integer id);
 
   Future<List<Vet>> findAll();
 
@@ -20,6 +21,6 @@ public interface VetPersistence {
 
   Future<Integer> save(Vet vet);
 
-  Future<Integer> remove(Vet vet);
+  Future<Integer> remove(Integer id);
 
 }

@@ -68,7 +68,6 @@ public class PetPersistenceImpl implements PetPersistence {
     return SqlTemplate
         .forUpdate(pool, sql)
         .mapFrom(PetParametersMapper.INSTANCE)
-        .mapTo(Row::toJson)
         .execute(pet)
         .map(result -> result.rowCount());
   }
@@ -86,7 +85,6 @@ public class PetPersistenceImpl implements PetPersistence {
     return SqlTemplate
         .forUpdate(pool, sql)
         .mapFrom(PetParametersMapper.INSTANCE)
-        .mapTo(Row::toJson)
         .execute(pet)
         .map(result -> result.rowCount());
   }
@@ -97,7 +95,6 @@ public class PetPersistenceImpl implements PetPersistence {
     return SqlTemplate
         .forUpdate(pool, sql)
         .mapFrom(PetParametersMapper.INSTANCE)
-        .mapTo(Row::toJson)
         .execute(pet)
         .map(result -> result.rowCount());
   }

@@ -1,12 +1,8 @@
 package org.example.petclinic.persistence.impl;
 
 import io.vertx.core.Future;
-import io.vertx.core.json.JsonObject;
 import io.vertx.sqlclient.Pool;
-import io.vertx.sqlclient.Row;
-import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.templates.SqlTemplate;
-import io.vertx.sqlclient.templates.TupleMapper;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +88,6 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
     return SqlTemplate
         .forUpdate(pool, sql)
         .mapFrom(OwnerParametersMapper.INSTANCE)
-        .mapTo(Row::toJson)
         .execute(owner)
         .map(result -> result.rowCount());
   }
@@ -111,7 +106,6 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
     return SqlTemplate
         .forUpdate(pool, sql)
         .mapFrom(OwnerParametersMapper.INSTANCE)
-        .mapTo(Row::toJson)
         .execute(owner)
         .map(result -> result.rowCount());
   }
@@ -121,7 +115,6 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
     String sql = "delete from owners where id = #{id}";
     return SqlTemplate
         .forUpdate(pool, sql)
-        .mapTo(Row::toJson)
         .execute(Collections.singletonMap("id", id))
         .map(result -> result.rowCount());
   }
