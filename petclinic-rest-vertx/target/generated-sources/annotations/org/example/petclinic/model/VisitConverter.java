@@ -20,6 +20,26 @@ public class VisitConverter {
    static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, Visit obj) {
     for (java.util.Map.Entry<String, Object> member : json) {
       switch (member.getKey()) {
+        case "description":
+          if (member.getValue() instanceof String) {
+            obj.setDescription((String)member.getValue());
+          }
+          break;
+        case "id":
+          if (member.getValue() instanceof Number) {
+            obj.setId(((Number)member.getValue()).intValue());
+          }
+          break;
+        case "pet":
+          if (member.getValue() instanceof JsonObject) {
+            obj.setPet(new org.example.petclinic.model.Pet((io.vertx.core.json.JsonObject)member.getValue()));
+          }
+          break;
+        case "petId":
+          if (member.getValue() instanceof Number) {
+            obj.setPetId(((Number)member.getValue()).intValue());
+          }
+          break;
       }
     }
   }
@@ -29,5 +49,17 @@ public class VisitConverter {
   }
 
    static void toJson(Visit obj, java.util.Map<String, Object> json) {
+    if (obj.getDescription() != null) {
+      json.put("description", obj.getDescription());
+    }
+    if (obj.getId() != null) {
+      json.put("id", obj.getId());
+    }
+    if (obj.getPet() != null) {
+      json.put("pet", obj.getPet().toJson());
+    }
+    if (obj.getPetId() != null) {
+      json.put("petId", obj.getPetId());
+    }
   }
 }

@@ -7,9 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import com.example.petclinic.model.Role;
 import com.example.petclinic.model.User;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,11 +19,6 @@ class UserServiceTests extends BaseServiceTests {
 
   @Autowired
   private UserService userService;
-
-  @BeforeEach
-  public void init() {
-    MockitoAnnotations.openMocks(this);
-  }
 
   @Test
   public void shouldAddUser() throws Exception {

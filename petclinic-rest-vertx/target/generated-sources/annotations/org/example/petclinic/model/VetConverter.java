@@ -20,6 +20,31 @@ public class VetConverter {
    static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, Vet obj) {
     for (java.util.Map.Entry<String, Object> member : json) {
       switch (member.getKey()) {
+        case "firstName":
+          if (member.getValue() instanceof String) {
+            obj.setFirstName((String)member.getValue());
+          }
+          break;
+        case "id":
+          if (member.getValue() instanceof Number) {
+            obj.setId(((Number)member.getValue()).intValue());
+          }
+          break;
+        case "lastName":
+          if (member.getValue() instanceof String) {
+            obj.setLastName((String)member.getValue());
+          }
+          break;
+        case "specialties":
+          if (member.getValue() instanceof JsonArray) {
+            java.util.ArrayList<org.example.petclinic.model.Specialty> list =  new java.util.ArrayList<>();
+            ((Iterable<Object>)member.getValue()).forEach( item -> {
+              if (item instanceof JsonObject)
+                list.add(new org.example.petclinic.model.Specialty((io.vertx.core.json.JsonObject)item));
+            });
+            obj.setSpecialties(list);
+          }
+          break;
       }
     }
   }
@@ -29,5 +54,19 @@ public class VetConverter {
   }
 
    static void toJson(Vet obj, java.util.Map<String, Object> json) {
+    if (obj.getFirstName() != null) {
+      json.put("firstName", obj.getFirstName());
+    }
+    if (obj.getId() != null) {
+      json.put("id", obj.getId());
+    }
+    if (obj.getLastName() != null) {
+      json.put("lastName", obj.getLastName());
+    }
+    if (obj.getSpecialties() != null) {
+      JsonArray array = new JsonArray();
+      obj.getSpecialties().forEach(item -> array.add(item.toJson()));
+      json.put("specialties", array);
+    }
   }
 }

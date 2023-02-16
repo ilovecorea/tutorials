@@ -59,7 +59,7 @@ paths:
       tags:
         - owner
       operationId: addOwner
-      x-vertx-event-bus: owners_manager.petclinic
+      x-vertx-event-bus: owners_petclinic
       summary: Adds a pet owner
       description: Records the details of a new pet owner.
       requestBody:
@@ -92,7 +92,7 @@ paths:
       tags:
         - owner
       operationId: listOwners
-      x-vertx-event-bus: owners_manager.petclinic
+      x-vertx-event-bus: owners_petclinic
       summary: Lists pet owners
       description: Returns an array of pet owners.
       parameters:
@@ -135,7 +135,7 @@ paths:
       tags:
         - owner
       operationId: getOwner
-      x-vertx-event-bus: owners_manager.petclinic
+      x-vertx-event-bus: owners_petclinic
       summary: Get a pet owner by ID
       description: Returns the pet owner or a 404 error.
       parameters:
@@ -189,7 +189,7 @@ paths:
       tags:
         - owner
       operationId: updateOwner
-      x-vertx-event-bus: owners_manager.petclinic
+      x-vertx-event-bus: owners_petclinic
       summary: Update a pet owner's details
       description: Updates the pet owner record with the specified details.
       parameters:
@@ -239,7 +239,7 @@ paths:
       tags:
         - owner
       operationId: deleteOwner
-      x-vertx-event-bus: owners_manager.petclinic
+      x-vertx-event-bus: owners_petclinic
       summary: Delete an owner by ID
       description: Returns the owner or a 404 error.
       parameters:
@@ -294,7 +294,6 @@ paths:
       tags:
         - pet
       operationId: addPetToOwner
-      x-vertx-event-bus: owners_manager.petclinic
       summary: Adds a pet to an owner
       description: Records the details of a new pet.
       parameters:

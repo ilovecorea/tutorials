@@ -20,6 +20,31 @@ public class UserConverter {
    static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, User obj) {
     for (java.util.Map.Entry<String, Object> member : json) {
       switch (member.getKey()) {
+        case "enabled":
+          if (member.getValue() instanceof Boolean) {
+            obj.setEnabled((Boolean)member.getValue());
+          }
+          break;
+        case "password":
+          if (member.getValue() instanceof String) {
+            obj.setPassword((String)member.getValue());
+          }
+          break;
+        case "roles":
+          if (member.getValue() instanceof JsonArray) {
+            java.util.ArrayList<org.example.petclinic.model.Role> list =  new java.util.ArrayList<>();
+            ((Iterable<Object>)member.getValue()).forEach( item -> {
+              if (item instanceof JsonObject)
+                list.add(new org.example.petclinic.model.Role((io.vertx.core.json.JsonObject)item));
+            });
+            obj.setRoles(list);
+          }
+          break;
+        case "username":
+          if (member.getValue() instanceof String) {
+            obj.setUsername((String)member.getValue());
+          }
+          break;
       }
     }
   }
@@ -29,5 +54,19 @@ public class UserConverter {
   }
 
    static void toJson(User obj, java.util.Map<String, Object> json) {
+    if (obj.getEnabled() != null) {
+      json.put("enabled", obj.getEnabled());
+    }
+    if (obj.getPassword() != null) {
+      json.put("password", obj.getPassword());
+    }
+    if (obj.getRoles() != null) {
+      JsonArray array = new JsonArray();
+      obj.getRoles().forEach(item -> array.add(item.toJson()));
+      json.put("roles", array);
+    }
+    if (obj.getUsername() != null) {
+      json.put("username", obj.getUsername());
+    }
   }
 }

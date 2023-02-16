@@ -1,4 +1,10 @@
 profile: dev
-base-path: /petclinic/
-
+base-path: /petclinic
+pg:
+  port: 5432
+  host: localhost
+  database: petclinic
+  username: postgres
+  password: petclinic
+  max-pool-size: 10
 
