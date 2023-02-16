@@ -23,6 +23,6 @@ public interface OwnersPersistence {
 
   Future<Owner> updateOwner(Integer ownerId, Owner owner);
 
-  Future<Void> removeOwner(Integer ownerId);
+  Future<Integer> removeOwner(Integer ownerId);
 
 }
