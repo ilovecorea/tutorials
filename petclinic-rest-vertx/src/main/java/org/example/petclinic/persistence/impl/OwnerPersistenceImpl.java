@@ -18,10 +18,14 @@ import org.example.petclinic.model.Owner;
 import org.example.petclinic.model.OwnerParametersMapper;
 import org.example.petclinic.model.OwnerRowMapper;
 import org.example.petclinic.persistence.OwnersPersistence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OwnerPersistenceImpl implements OwnersPersistence {
 
   private final Pool pool;
+
+  private static final Logger log = LoggerFactory.getLogger(OwnerPersistenceImpl.class);
 
   public OwnerPersistenceImpl(Pool pool) {
     this.pool = pool;
@@ -34,10 +38,9 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
           id, first_name, last_name, address, city, telephone
         from owners
         """.trim();
-    SqlTemplate<Map<String, Object>, RowSet<Owner>> queryTemplate = SqlTemplate
+    return SqlTemplate
         .forQuery(pool, sql)
-        .mapTo(OwnerRowMapper.INSTANCE);
-    return queryTemplate
+        .mapTo(OwnerRowMapper.INSTANCE)
         .execute(Map.of())
         .map(owners -> StreamSupport.stream(owners.spliterator(), false)
             .collect(Collectors.toList()));
@@ -45,6 +48,7 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
 
   @Override
   public Future<List<Owner>> findByLastName(String lastName) {
+    log.debug("## lastName:{}", lastName);
     if (StringUtils.isEmpty(lastName)) {
       return findAll();
     }
@@ -54,11 +58,10 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
         from owners
         where last_name = #{lastName}
         """.trim();
-    SqlTemplate<Map<String, Object>, RowSet<Owner>> template = SqlTemplate
+    return SqlTemplate
         .forQuery(pool, sql)
-        .mapTo(OwnerRowMapper.INSTANCE);
-    return template
-        .execute(Map.of())
+        .mapTo(OwnerRowMapper.INSTANCE)
+        .execute(Map.of("lastName", lastName))
         .map(owners -> StreamSupport.stream(owners.spliterator(), false)
             .collect(Collectors.toList()));
   }
@@ -71,10 +74,9 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
          from owners
         where id = #{id}
         """.trim();
-    SqlTemplate<Map<String, Object>, RowSet<Owner>> template = SqlTemplate
+    return SqlTemplate
         .forQuery(pool, sql)
-        .mapTo(OwnerRowMapper.INSTANCE);
-    return template
+        .mapTo(OwnerRowMapper.INSTANCE)
         .execute(Collections.singletonMap("id", ownerId))
         .map(owner -> owner.iterator().hasNext()
             ? Optional.of(owner.iterator().next())
@@ -82,21 +84,21 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
   }
 
   @Override
-  public Future<Owner> createOwner(Owner owner) {
+  public Future<Integer> createOwner(Owner owner) {
     String sql = """
         insert into owners(first_name, last_name, address, city, telephone)
         valeus (#{firstName}, #{lastName}, #{address}, #{city}, #{telephone})
         """.trim();
-    SqlTemplate<Owner, RowSet<Owner>> template = SqlTemplate
+    return SqlTemplate
         .forUpdate(pool, sql)
         .mapFrom(OwnerParametersMapper.INSTANCE)
-        .mapTo(OwnerRowMapper.INSTANCE);
-    return template.execute(owner)
-        .map(result -> result.iterator().next());
+        .mapTo(OwnerRowMapper.INSTANCE)
+        .execute(owner)
+        .map(result -> result.rowCount());
   }
 
   @Override
-  public Future<Owner> updateOwner(Integer ownerId, Owner owner) {
+  public Future<Integer> updateOwner(Owner owner) {
     String sql = """
         update owners
            set first_name = #{firstName},
@@ -106,22 +108,22 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
                telephone = #{telephone}
          where id = #{id}
         """.trim();
-    SqlTemplate<Owner, RowSet<Owner>> template = SqlTemplate
+    return SqlTemplate
         .forUpdate(pool, sql)
         .mapFrom(OwnerParametersMapper.INSTANCE)
-        .mapTo(OwnerRowMapper.INSTANCE);
-    return template.execute(owner)
-        .map(result -> result.iterator().next());
+        .mapTo(OwnerRowMapper.INSTANCE)
+        .execute(owner)
+        .map(result -> result.rowCount());
   }
 
   @Override
-  public Future<Integer> removeOwner(Integer ownerId) {
+  public Future<Integer> deleteOwner(Owner owner) {
     String sql = "delete from owners where id = #{id}";
     return SqlTemplate
         .forUpdate(pool, sql)
-        .mapFrom(TupleMapper.jsonObject())
+        .mapFrom(OwnerParametersMapper.INSTANCE)
         .mapTo(Row::toJson)
-        .execute(JsonObject.of("id", ownerId))
+        .execute(owner)
         .map(result -> result.rowCount());
   }
 }

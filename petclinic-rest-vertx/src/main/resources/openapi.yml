@@ -294,6 +294,7 @@ paths:
       tags:
         - pet
       operationId: addPetToOwner
+      x-vertx-event-bus: owners_petclinic
       summary: Adds a pet to an owner
       description: Records the details of a new pet.
       parameters:
@@ -343,6 +344,7 @@ paths:
       tags:
         - pet
       operationId: getOwnersPet
+      x-vertx-event-bus: owners_petclinic
       summary: Get a pet by ID
       description: Returns the pet or a 404 error.
       parameters:
@@ -405,7 +407,7 @@ paths:
       tags:
         - pet
       operationId: updateOwnersPet
-
+      x-vertx-event-bus: owners_petclinic
       summary: Update a pet's details
       description: Updates the pet record with the specified details.
       parameters:
@@ -460,6 +462,7 @@ paths:
       tags:
         - visit
       operationId: addVisitToOwner
+      x-vertx-event-bus: owners_petclinic
       summary: Adds a vet visit
       description: Records the details of a new vet visit.
       parameters:

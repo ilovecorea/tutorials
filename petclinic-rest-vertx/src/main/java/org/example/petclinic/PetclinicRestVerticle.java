@@ -26,6 +26,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import org.example.petclinic.persistence.OwnersPersistence;
+import org.example.petclinic.persistence.PetPersistence;
 import org.example.petclinic.rest.GlobalErrorHandler;
 import org.example.petclinic.service.OwnersService;
 import org.slf4j.Logger;
@@ -42,7 +43,8 @@ public class PetclinicRestVerticle extends AbstractVerticle {
   private void bindService(PgPool pool) {
     serviceBinder = new ServiceBinder(vertx);
     OwnersPersistence ownersPersistence = OwnersPersistence.create(pool);
-    OwnersService ownersService = OwnersService.create(ownersPersistence);
+    PetPersistence petPersistence = PetPersistence.create(pool);
+    OwnersService ownersService = OwnersService.create(ownersPersistence, petPersistence);
     consumer = serviceBinder
         .setAddress("owners_petclinic")
         .register(OwnersService.class, ownersService);

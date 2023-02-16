@@ -20,6 +20,11 @@ public class VisitConverter {
    static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, Visit obj) {
     for (java.util.Map.Entry<String, Object> member : json) {
       switch (member.getKey()) {
+        case "date":
+          if (member.getValue() instanceof String) {
+            obj.setDate((String)member.getValue());
+          }
+          break;
         case "description":
           if (member.getValue() instanceof String) {
             obj.setDescription((String)member.getValue());
@@ -49,6 +54,9 @@ public class VisitConverter {
   }
 
    static void toJson(Visit obj, java.util.Map<String, Object> json) {
+    if (obj.getDate() != null) {
+      json.put("date", obj.getDate());
+    }
     if (obj.getDescription() != null) {
       json.put("description", obj.getDescription());
     }

@@ -10,6 +10,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
+import org.example.petclinic.model.PetType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -39,5 +40,12 @@ public class ConfigTest {
       assertThat(config.getString(Config.BASE_PATH), is("/petclinic/"));
       testContext.completeNow();
     })));
+  }
+
+  @Test
+  void test() {
+    JsonObject json = new JsonObject().put("id", 1).put("name", "doc");
+    PetType petType = new PetType(json);
+    System.out.println(petType.getName());
   }
 }

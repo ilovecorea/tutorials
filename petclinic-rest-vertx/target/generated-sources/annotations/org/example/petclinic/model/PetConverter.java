@@ -20,6 +20,11 @@ public class PetConverter {
    static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, Pet obj) {
     for (java.util.Map.Entry<String, Object> member : json) {
       switch (member.getKey()) {
+        case "birthDate":
+          if (member.getValue() instanceof String) {
+            obj.setBirthDate((String)member.getValue());
+          }
+          break;
         case "id":
           if (member.getValue() instanceof Number) {
             obj.setId(((Number)member.getValue()).intValue());
@@ -69,6 +74,9 @@ public class PetConverter {
   }
 
    static void toJson(Pet obj, java.util.Map<String, Object> json) {
+    if (obj.getBirthDate() != null) {
+      json.put("birthDate", obj.getBirthDate());
+    }
     if (obj.getId() != null) {
       json.put("id", obj.getId());
     }

@@ -1,12 +1,25 @@
 package org.example.petclinic.model;
 
 import io.vertx.codegen.annotations.DataObject;
+import io.vertx.codegen.format.SnakeCase;
 import io.vertx.core.json.JsonObject;
+import io.vertx.sqlclient.templates.annotations.ParametersMapped;
+import io.vertx.sqlclient.templates.annotations.RowMapped;
 import java.time.LocalDate;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
-@Data
+@Accessors(chain = true)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@RowMapped(formatter = SnakeCase.class)
+@ParametersMapped(formatter = SnakeCase.class)
 @DataObject(generateConverter = true, publicConverter = false)
 public class Visit {
 
@@ -14,7 +27,7 @@ public class Visit {
 
   private Integer petId;
 
-  private LocalDate date;
+  private String date;
 
   private String description;
 
