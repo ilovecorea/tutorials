@@ -13,17 +13,21 @@ import org.example.petclinic.model.Pet;
 import org.example.petclinic.model.PetParametersMapper;
 import org.example.petclinic.model.PetRowMapper;
 import org.example.petclinic.persistence.PetPersistence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PetPersistenceImpl implements PetPersistence {
 
   private final Pool pool;
+
+  private static final Logger log = LoggerFactory.getLogger(PetPersistenceImpl.class);
 
   public PetPersistenceImpl(Pool pool) {
     this.pool = pool;
   }
 
   @Override
-  public Future<Optional<Pet>> findPetById(Integer id) {
+  public Future<Optional<Pet>> findById(Integer id) {
     String sql = """
         select
           id, name, birth_date, type_id, owner_id
@@ -40,7 +44,7 @@ public class PetPersistenceImpl implements PetPersistence {
   }
 
   @Override
-  public Future<List<Pet>> findAllPets() {
+  public Future<List<Pet>> findAll() {
     String sql = """
         select
           id, name, birth_date, type_id, owner_id
@@ -55,10 +59,11 @@ public class PetPersistenceImpl implements PetPersistence {
   }
 
   @Override
-  public Future<Integer> createPet(Pet pet) {
+  public Future<Integer> add(Pet pet) {
+    log.debug("## pet:{}", pet);
     String sql = """
         insert into pets(name, birth_date, type_id, owner_id)
-        values (#{name}, to_date(#{birthDate}, 'YYYY-MM-DD'), #{typeId}, #{ownerId})
+        values (#{name}, to_date(#{birth_date}, 'YYYY-MM-DD'), #{type_id}, #{owner_id})
         """.trim();
     return SqlTemplate
         .forUpdate(pool, sql)
@@ -69,13 +74,13 @@ public class PetPersistenceImpl implements PetPersistence {
   }
 
   @Override
-  public Future<Integer> updatePet(Pet pet) {
+  public Future<Integer> save(Pet pet) {
     String sql = """
         update pets
            set name = #{name},
-               birth_date = to_date(#{birthDate}, 'YYYY-MM-DD'),
-               type_id = #{typeId},
-               owner_id = #{ownerId}
+               birth_date = to_date(#{birth_date}, 'YYYY-MM-DD'),
+               type_id = #{type_id},
+               owner_id = #{owner_id}
          where id = #{id}
         """.trim();
     return SqlTemplate
@@ -87,7 +92,7 @@ public class PetPersistenceImpl implements PetPersistence {
   }
 
   @Override
-  public Future<Integer> deletePet(Pet pet) {
+  public Future<Integer> remove(Pet pet) {
     String sql = "delete from pets where id = #{id}";
     return SqlTemplate
         .forUpdate(pool, sql)

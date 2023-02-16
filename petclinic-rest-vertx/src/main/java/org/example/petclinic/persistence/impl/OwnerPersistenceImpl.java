@@ -56,7 +56,7 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
         select
           id, first_name, last_name, address, city, telephone
         from owners
-        where last_name = #{lastName}
+        where last_name = #{last_name}
         """.trim();
     return SqlTemplate
         .forQuery(pool, sql)
@@ -84,25 +84,25 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
   }
 
   @Override
-  public Future<Integer> createOwner(Owner owner) {
+  public Future<Integer> add(Owner owner) {
     String sql = """
         insert into owners(first_name, last_name, address, city, telephone)
-        valeus (#{firstName}, #{lastName}, #{address}, #{city}, #{telephone})
+        valeus (#{first_name}, #{last_name}, #{address}, #{city}, #{telephone})
         """.trim();
     return SqlTemplate
         .forUpdate(pool, sql)
         .mapFrom(OwnerParametersMapper.INSTANCE)
-        .mapTo(OwnerRowMapper.INSTANCE)
+        .mapTo(Row::toJson)
         .execute(owner)
         .map(result -> result.rowCount());
   }
 
   @Override
-  public Future<Integer> updateOwner(Owner owner) {
+  public Future<Integer> save(Owner owner) {
     String sql = """
         update owners
-           set first_name = #{firstName},
-               last_name = #{lastName},
+           set first_name = #{first_name},
+               last_name = #{last_name},
                address = #{address},
                city = #{city},
                telephone = #{telephone}
@@ -111,19 +111,18 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
     return SqlTemplate
         .forUpdate(pool, sql)
         .mapFrom(OwnerParametersMapper.INSTANCE)
-        .mapTo(OwnerRowMapper.INSTANCE)
+        .mapTo(Row::toJson)
         .execute(owner)
         .map(result -> result.rowCount());
   }
 
   @Override
-  public Future<Integer> deleteOwner(Owner owner) {
+  public Future<Integer> remove(Integer id) {
     String sql = "delete from owners where id = #{id}";
     return SqlTemplate
         .forUpdate(pool, sql)
-        .mapFrom(OwnerParametersMapper.INSTANCE)
         .mapTo(Row::toJson)
-        .execute(owner)
+        .execute(Collections.singletonMap("id", id))
         .map(result -> result.rowCount());
   }
 }

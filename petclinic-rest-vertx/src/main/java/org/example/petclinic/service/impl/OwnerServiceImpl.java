@@ -68,7 +68,7 @@ public class OwnerServiceImpl implements OwnersService {
   @Override
   public void addOwner(Owner body, ServiceRequest request,
       Handler<AsyncResult<ServiceResponse>> resultHandler) {
-    ownersPersistence.createOwner(body)
+    ownersPersistence.add(body)
         .onSuccess(owner -> resultHandler.handle(
             Future.succeededFuture(new ServiceResponse().setStatusCode(201))))
         .onFailure(e -> Future.succeededFuture(new ServiceResponse().setStatusCode(500)));
@@ -78,7 +78,7 @@ public class OwnerServiceImpl implements OwnersService {
   public void updateOwner(Integer ownerId, Owner body, ServiceRequest request,
       Handler<AsyncResult<ServiceResponse>> resultHandler) {
     body.setId(ownerId);
-    ownersPersistence.updateOwner(body)
+    ownersPersistence.save(body)
         .onSuccess(owner -> resultHandler.handle(
             Future.succeededFuture(new ServiceResponse().setStatusCode(204))))
         .onFailure(e -> Future.succeededFuture(new ServiceResponse().setStatusCode(500)));
@@ -87,14 +87,18 @@ public class OwnerServiceImpl implements OwnersService {
   @Override
   public void deleteOwner(Integer ownerId, ServiceRequest request,
       Handler<AsyncResult<ServiceResponse>> resultHandler) {
-    ownersPersistence.deleteOwner(new Owner().setId(ownerId));
+    ownersPersistence.remove(ownerId);
   }
 
   @Override
   public void addPetToOwner(Integer ownerId, Pet body, ServiceRequest request,
       Handler<AsyncResult<ServiceResponse>> resultHandler) {
     body.setOwnerId(ownerId);
-    resultHandler.handle(Future.succeededFuture(new ServiceResponse().setStatusCode(201)));
+    body.setTypeId(body.getType().getId());
+    petPersistence.add(body)
+        .onSuccess(result -> resultHandler.handle(
+            Future.succeededFuture(new ServiceResponse().setStatusCode(201))))
+        .onFailure(e -> Future.succeededFuture(new ServiceResponse().setStatusCode(500)));
   }
 
   @Override

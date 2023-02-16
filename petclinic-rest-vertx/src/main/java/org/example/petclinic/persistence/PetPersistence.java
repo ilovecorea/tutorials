@@ -13,14 +13,14 @@ public interface PetPersistence {
     return new PetPersistenceImpl(pool);
   }
 
-  Future<Optional<Pet>> findPetById(Integer id);
+  Future<Optional<Pet>> findById(Integer id);
 
-  Future<List<Pet>> findAllPets();
+  Future<List<Pet>> findAll();
 
-  Future<Integer> createPet(Pet pet);
+  Future<Integer> add(Pet pet);
 
-  Future<Integer> updatePet(Pet pet);
+  Future<Integer> save(Pet pet);
 
-  Future<Integer> deletePet(Pet pet);
+  Future<Integer> remove(Pet pet);
 
 }

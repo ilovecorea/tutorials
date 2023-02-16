@@ -19,10 +19,10 @@ public interface OwnersPersistence {
 
   Future<Optional<Owner>> findById(Integer ownerId);
 
-  Future<Integer> createOwner(Owner owner);
+  Future<Integer> add(Owner owner);
 
-  Future<Integer> updateOwner(Owner owner);
+  Future<Integer> save(Owner owner);
 
-  Future<Integer> deleteOwner(Owner owner);
+  Future<Integer> remove(Integer id);
 
 }

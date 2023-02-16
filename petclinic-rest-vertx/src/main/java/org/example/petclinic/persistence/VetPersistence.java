@@ -1,19 +1,25 @@
 package org.example.petclinic.persistence;
 
 import io.vertx.core.Future;
+import io.vertx.sqlclient.Pool;
 import java.util.List;
 import org.example.petclinic.model.Vet;
+import org.example.petclinic.persistence.impl.VetPersistenceImpl;
 
 public interface VetPersistence {
 
-  Future<Vet> findVetById(Integer id);
+  static VetPersistenceImpl create(Pool pool) {
+    return new VetPersistenceImpl(pool);
+  }
 
-  Future<List<Vet>> findAllVets();
+  Future<Vet> findById(Integer id);
 
-  Future<Integer> createVet(Vet vet);
+  Future<List<Vet>> findAll();
 
-  Future<Integer> updateVet(Vet vet);
+  Future<Integer> add(Vet vet);
 
-  Future<Integer> deleteVet(Vet vet);
+  Future<Integer> save(Vet vet);
+
+  Future<Integer> remove(Vet vet);
 
 }

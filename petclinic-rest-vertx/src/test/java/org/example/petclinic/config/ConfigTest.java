@@ -37,7 +37,7 @@ public class ConfigTest {
 
     retriever.getConfig(testContext.succeeding(config -> testContext.verify(() -> {
       assertThat(config.getString(Config.PROFILE), is("local"));
-      assertThat(config.getString(Config.BASE_PATH), is("/petclinic/"));
+      assertThat(config.getString(Config.BASE_PATH), is("/petclinic"));
       testContext.completeNow();
     })));
   }

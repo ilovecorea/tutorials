@@ -1,19 +1,25 @@
 package org.example.petclinic.persistence;
 
-import java.util.concurrent.Future;
-import liquibase.command.core.FutureRollbackCountSqlCommandStep;
+import io.vertx.core.Future;
+import io.vertx.sqlclient.Pool;
+import java.util.Optional;
 import org.example.petclinic.model.PetType;
+import org.example.petclinic.persistence.impl.PetTypePersistenceImpl;
 
 public interface PetTypePersistence {
 
-  Future<PetType> findPetTypeById(Integer petTypeId);
+  static PetTypePersistenceImpl create(Pool pool) {
+    return new PetTypePersistenceImpl(pool);
+  }
 
-  Future<PetType> findAllPetTypes();
+  Future<Optional<PetType>> findById(Integer id);
 
-  Future<Integer> createPetType(PetType petType);
+  Future<PetType> findAll();
 
-  Future<Integer> updatePetType(PetType petType);
+  Future<Integer> add(PetType petType);
 
-  Future<Integer> deletePetType(PetType petType);
+  Future<Integer> save(PetType petType);
+
+  Future<Integer> remove(PetType petType);
 
 }
