@@ -52,6 +52,9 @@ public class SpecialtyRestController implements SpecialtiesApi {
   @Override
   public ResponseEntity<SpecialtyDto> getSpecialty(Integer specialtyId) {
     Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
+    if (specialty == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
     return new ResponseEntity<>(specialtyMapper.toSpecialtyDto(specialty), HttpStatus.OK);
   }
 
@@ -92,6 +95,9 @@ public class SpecialtyRestController implements SpecialtiesApi {
   @Override
   public ResponseEntity<SpecialtyDto> deleteSpecialty(Integer specialtyId) {
     Specialty specialty = this.clinicService.findSpecialtyById(specialtyId);
+    if (specialty == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
     this.clinicService.deleteSpecialty(specialty);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

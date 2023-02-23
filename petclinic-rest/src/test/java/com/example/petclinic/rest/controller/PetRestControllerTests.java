@@ -40,7 +40,7 @@ import org.springframework.test.web.servlet.MockMvc;
     PetMapperImpl.class
 })
 @Import(value = {PetRestController.class, ExceptionControllerAdvice.class})
-@WebMvcTest(PetRestController.class)
+@WebMvcTest
 public class PetRestControllerTests {
 
   @MockBean

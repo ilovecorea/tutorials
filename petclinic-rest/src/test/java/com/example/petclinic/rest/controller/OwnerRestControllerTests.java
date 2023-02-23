@@ -49,7 +49,7 @@ import org.springframework.test.web.servlet.MockMvc;
     PetMapperImpl.class
 })
 @Import(value = {OwnerRestController.class, ExceptionControllerAdvice.class})
-@WebMvcTest(OwnerRestController.class)
+@WebMvcTest
 class OwnerRestControllerTests {
 
   @Autowired

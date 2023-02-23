@@ -27,14 +27,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ContextConfiguration(classes = {
     ApplicationTestConfig.class,
     PetTypeMapperImpl.class
 })
 @Import(value = {PetTypeRestController.class, ExceptionControllerAdvice.class})
-@WebMvcTest(PetTypeRestController.class)
+@WebMvcTest
 public class PetTypeControllerTests {
 
   @Autowired
