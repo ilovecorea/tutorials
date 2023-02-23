@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.petclinic.mapper.PetTypeMapperImpl;
 import com.example.petclinic.mapper.SpecialtyMapper;
 import com.example.petclinic.mapper.SpecialtyMapperImpl;
 import com.example.petclinic.model.Specialty;
@@ -28,7 +27,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ContextConfiguration(classes = {
     ApplicationTestConfig.class,

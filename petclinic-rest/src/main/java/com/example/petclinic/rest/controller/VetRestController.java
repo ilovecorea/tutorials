@@ -55,6 +55,9 @@ public class VetRestController implements VetsApi {
     @Override
     public ResponseEntity<VetDto> getVet(Integer vetId)  {
         Vet vet = this.clinicService.findVetById(vetId);
+        if (vet == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(vetMapper.toVetDto(vet), HttpStatus.OK);
     }
 
@@ -96,6 +99,9 @@ public class VetRestController implements VetsApi {
     @Override
     public ResponseEntity<VetDto> deleteVet(Integer vetId) {
         Vet vet = this.clinicService.findVetById(vetId);
+        if (vet == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         this.clinicService.deleteVet(vet);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

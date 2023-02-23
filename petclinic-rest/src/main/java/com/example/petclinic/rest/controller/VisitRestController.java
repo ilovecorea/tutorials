@@ -5,7 +5,6 @@ import com.example.petclinic.model.Visit;
 import com.example.petclinic.rest.api.VisitsApi;
 import com.example.petclinic.rest.dto.VisitDto;
 import com.example.petclinic.service.ClinicService;
-import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.http.HttpHeaders;
@@ -51,6 +50,9 @@ public class VisitRestController implements VisitsApi {
     @Override
     public ResponseEntity<VisitDto> getVisit( Integer visitId) {
         Visit visit = this.clinicService.findVisitById(visitId);
+        if (visit == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(visitMapper.toVisitDto(visit), HttpStatus.OK);
     }
 
@@ -89,6 +91,9 @@ public class VisitRestController implements VisitsApi {
     @Override
     public ResponseEntity<VisitDto> deleteVisit(Integer visitId) {
         Visit visit = this.clinicService.findVisitById(visitId);
+        if (visit == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         this.clinicService.deleteVisit(visit);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

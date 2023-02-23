@@ -1,16 +1,11 @@
 package com.example.petclinic.rest.controller;
 
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @TestConfiguration
 public class ApplicationTestConfig extends WebSecurityConfigurerAdapter {
-
-	public ApplicationTestConfig(){
-		MockitoAnnotations.openMocks(this);
-	}
 
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
