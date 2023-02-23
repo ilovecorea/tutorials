@@ -8,10 +8,13 @@ import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.MessageConsumer;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.openapi.RouterBuilder;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgPool;
@@ -97,12 +100,22 @@ public class PetclinicRestVerticle extends AbstractVerticle {
         .onFailure(Throwable::printStackTrace)
         .compose(routerBuilder -> {
           routerBuilder.mountServicesFromExtensions();
+          routerBuilder.rootHandler(rc -> {
+            rc.response().headers().add("Access-Control-Allow-Origin", "*");
+            rc.next();
+          });
           Router router = routerBuilder.createRouter();
-          router.errorHandler(400, ctx -> {
-            log.debug("Bad Request", ctx.failure());
+          router.errorHandler(400, rc -> {
+            log.debug("Bad Request", rc.failure());
+            rc.response()
+                .setStatusCode(400)
+                .setStatusMessage(rc.failure().getMessage());
           });
           server = vertx.createHttpServer(
-              new HttpServerOptions().setPort(9966).setHost("localhost")).requestHandler(router);
+              new HttpServerOptions()
+                  .setPort(9966)
+                  .setHost("localhost"))
+              .requestHandler(router);
           return server.listen().mapEmpty();
         });
   }
