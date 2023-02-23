@@ -35,6 +35,9 @@ public class PetRestController implements PetsApi {
     @Override
     public ResponseEntity<PetDto> getPet(Integer petId) {
         PetDto pet = petMapper.toPetDto(this.clinicService.findPetById(petId));
+        if (pet == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(pet, HttpStatus.OK);
     }
 
@@ -73,6 +76,9 @@ public class PetRestController implements PetsApi {
     @Override
     public ResponseEntity<PetDto> deletePet(Integer petId) {
         Pet pet = this.clinicService.findPetById(petId);
+        if (pet == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         this.clinicService.deletePet(pet);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
