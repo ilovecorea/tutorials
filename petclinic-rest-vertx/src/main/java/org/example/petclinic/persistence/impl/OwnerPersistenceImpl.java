@@ -57,7 +57,7 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
     return SqlTemplate
         .forQuery(pool, sql)
         .mapTo(OwnerRowMapper.INSTANCE)
-        .execute(Map.of("lastName", lastName))
+        .execute(Map.of("last_name", lastName))
         .map(owners -> StreamSupport.stream(owners.spliterator(), false)
             .collect(Collectors.toList()));
   }
@@ -83,7 +83,7 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
   public Future<Integer> add(Owner owner) {
     String sql = """
         insert into owners(first_name, last_name, address, city, telephone)
-        valeus (#{first_name}, #{last_name}, #{address}, #{city}, #{telephone})
+        values (#{first_name}, #{last_name}, #{address}, #{city}, #{telephone})
         """.trim();
     return SqlTemplate
         .forUpdate(pool, sql)

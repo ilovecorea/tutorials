@@ -47,7 +47,8 @@ public class OwnerServiceImpl implements OwnersService {
                             owners.stream().map(Owner::toJson).collect(Collectors.toList())))));
           }
         })
-        .onFailure(e -> Future.succeededFuture(new ServiceResponse().setStatusCode(500)));
+        .onFailure(e -> resultHandler.handle(
+            Future.succeededFuture(new ServiceResponse().setStatusCode(500))));
   }
 
   @Override
@@ -62,7 +63,7 @@ public class OwnerServiceImpl implements OwnersService {
             resultHandler.handle(Future.succeededFuture(new ServiceResponse().setStatusCode(404)));
           }
         })
-        .onFailure(e -> Future.succeededFuture(new ServiceResponse().setStatusCode(500)));
+        .onFailure(e -> resultHandler.handle(Future.succeededFuture(new ServiceResponse().setStatusCode(500))));
   }
 
   @Override
@@ -71,7 +72,7 @@ public class OwnerServiceImpl implements OwnersService {
     ownersPersistence.add(body)
         .onSuccess(owner -> resultHandler.handle(
             Future.succeededFuture(new ServiceResponse().setStatusCode(201))))
-        .onFailure(e -> Future.succeededFuture(new ServiceResponse().setStatusCode(500)));
+        .onFailure(e -> resultHandler.handle(Future.succeededFuture(new ServiceResponse().setStatusCode(500))));
   }
 
   @Override
@@ -81,7 +82,7 @@ public class OwnerServiceImpl implements OwnersService {
     ownersPersistence.save(body)
         .onSuccess(owner -> resultHandler.handle(
             Future.succeededFuture(new ServiceResponse().setStatusCode(204))))
-        .onFailure(e -> Future.succeededFuture(new ServiceResponse().setStatusCode(500)));
+        .onFailure(e -> resultHandler.handle(Future.succeededFuture(new ServiceResponse().setStatusCode(500))));
   }
 
   @Override
@@ -98,7 +99,7 @@ public class OwnerServiceImpl implements OwnersService {
     petPersistence.add(body)
         .onSuccess(result -> resultHandler.handle(
             Future.succeededFuture(new ServiceResponse().setStatusCode(201))))
-        .onFailure(e -> Future.succeededFuture(new ServiceResponse().setStatusCode(500)));
+        .onFailure(e -> resultHandler.handle(Future.succeededFuture(new ServiceResponse().setStatusCode(500))));
   }
 
   @Override

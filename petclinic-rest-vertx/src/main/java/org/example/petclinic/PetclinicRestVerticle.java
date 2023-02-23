@@ -25,10 +25,13 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import org.example.petclinic.model.User;
 import org.example.petclinic.persistence.OwnersPersistence;
 import org.example.petclinic.persistence.PetPersistence;
+import org.example.petclinic.persistence.UserPersistence;
 import org.example.petclinic.rest.GlobalErrorHandler;
 import org.example.petclinic.service.OwnersService;
+import org.example.petclinic.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,11 +47,18 @@ public class PetclinicRestVerticle extends AbstractVerticle {
     serviceBinder = new ServiceBinder(vertx);
     OwnersPersistence ownersPersistence = OwnersPersistence.create(pool);
     PetPersistence petPersistence = PetPersistence.create(pool);
+    UserPersistence userPersistence = UserPersistence.create(pool);
+
     OwnersService ownersService = OwnersService.create(ownersPersistence, petPersistence);
     consumer = serviceBinder
         .setAddress("owners_petclinic")
         .register(OwnersService.class, ownersService);
-    System.out.println("########## bindService ##############");
+
+    UserService userService = UserService.create(userPersistence);
+    consumer = serviceBinder
+        .setAddress("users_petclinic")
+        .register(UserService.class, userService);
+
   }
 
   private Future<JsonObject> getConfig() {
@@ -60,7 +70,6 @@ public class PetclinicRestVerticle extends AbstractVerticle {
         .setConfig(new JsonObject().put("path", configPath));
     ConfigRetriever retriever = ConfigRetriever.create(vertx,
         new ConfigRetrieverOptions().addStore(store));
-    System.out.println("########## getConfig ##############");
     return retriever.getConfig();
   }
 
@@ -74,7 +83,6 @@ public class PetclinicRestVerticle extends AbstractVerticle {
         .setPassword(pg.getString("password"));
     PoolOptions poolOptions = new PoolOptions()
         .setMaxSize(pg.getInteger("max-pool-size", 10));
-    System.out.println("########## createPgPool ##############");
     return PgPool.pool(vertx, connectOptions, poolOptions);
   }
 

@@ -1778,6 +1778,7 @@ paths:
       tags:
         - user
       operationId: addUser
+      x-vertx-event-bus: users_petclinic
       summary: Create a user
       description: Creates a user.
       requestBody:

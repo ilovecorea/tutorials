@@ -30,9 +30,9 @@ public class RoleConverter {
             obj.setName((String)member.getValue());
           }
           break;
-        case "user":
-          if (member.getValue() instanceof JsonObject) {
-            obj.setUser(new org.example.petclinic.model.User((io.vertx.core.json.JsonObject)member.getValue()));
+        case "username":
+          if (member.getValue() instanceof String) {
+            obj.setUsername((String)member.getValue());
           }
           break;
       }
@@ -50,8 +50,8 @@ public class RoleConverter {
     if (obj.getName() != null) {
       json.put("name", obj.getName());
     }
-    if (obj.getUser() != null) {
-      json.put("user", obj.getUser().toJson());
+    if (obj.getUsername() != null) {
+      json.put("username", obj.getUsername());
     }
   }
 }

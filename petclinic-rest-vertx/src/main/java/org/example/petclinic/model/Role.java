@@ -15,6 +15,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @RowMapped(formatter = SnakeCase.class)
@@ -23,11 +24,13 @@ import lombok.experimental.Accessors;
 public class Role {
 
   protected Integer id;
-
+  private String username;
   private String name;
 
-  @ToString.Exclude
-  private User user;
+  public Role(String username, String name) {
+    this.username = username;
+    this.name = name;
+  }
 
   public Role(JsonObject json) {
     RoleConverter.fromJson(json, this);
