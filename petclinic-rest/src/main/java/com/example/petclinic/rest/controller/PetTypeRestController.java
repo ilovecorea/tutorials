@@ -49,6 +49,9 @@ public class PetTypeRestController implements PettypesApi {
   @Override
   public ResponseEntity<PetTypeDto> getPetType(Integer petTypeId) {
     PetType petType = this.clinicService.findPetTypeById(petTypeId);
+    if (petType == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
     return new ResponseEntity<>(petTypeMapper.toPetTypeDto(petType), HttpStatus.OK);
   }
 
@@ -85,6 +88,9 @@ public class PetTypeRestController implements PettypesApi {
   @Override
   public ResponseEntity<PetTypeDto> deletePetType(Integer petTypeId) {
     PetType petType = this.clinicService.findPetTypeById(petTypeId);
+    if (petType == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
     this.clinicService.deletePetType(petType);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

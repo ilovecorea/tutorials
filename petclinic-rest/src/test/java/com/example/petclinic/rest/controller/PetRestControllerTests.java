@@ -23,9 +23,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +45,6 @@ public class PetRestControllerTests {
 
   @MockBean
   protected ClinicService clinicService;
-
-  @Autowired
-  private PetRestController petRestController;
 
   @Autowired
   private PetMapper petMapper;
