@@ -4,6 +4,7 @@ import io.vertx.core.Future;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.templates.SqlTemplate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -90,12 +91,11 @@ public class PetPersistenceImpl implements PetPersistence {
   }
 
   @Override
-  public Future<Integer> remove(Pet pet) {
+  public Future<Integer> remove(Integer id) {
     String sql = "delete from pets where id = #{id}";
     return SqlTemplate
         .forUpdate(pool, sql)
-        .mapFrom(PetParametersMapper.INSTANCE)
-        .execute(pet)
+        .execute(Collections.singletonMap("id", id))
         .map(result -> result.rowCount());
   }
 }

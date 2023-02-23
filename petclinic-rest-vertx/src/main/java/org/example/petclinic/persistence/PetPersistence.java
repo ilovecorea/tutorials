@@ -21,6 +21,6 @@ public interface PetPersistence {
 
   Future<Integer> save(Pet pet);
 
-  Future<Integer> remove(Pet pet);
+  Future<Integer> remove(Integer id);
 
 }

@@ -110,7 +110,7 @@ public interface ClinicService {
   void getSpecialty(Integer specialtyId, ServiceRequest request,
       Handler<AsyncResult<ServiceResponse>> resultHandler);
 
-  void updateSpecialty(Integer specialtyId, ServiceRequest request,
+  void updateSpecialty(Integer specialtyId, Specialty body, ServiceRequest request,
       Handler<AsyncResult<ServiceResponse>> resultHandler);
 
   void deleteSpecialty(Integer specialtyId, ServiceRequest request,
