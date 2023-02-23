@@ -59,7 +59,7 @@ paths:
       tags:
         - owner
       operationId: addOwner
-      x-vertx-event-bus: owners_petclinic
+      x-vertx-event-bus: petclinic.default
       summary: Adds a pet owner
       description: Records the details of a new pet owner.
       requestBody:
@@ -92,7 +92,7 @@ paths:
       tags:
         - owner
       operationId: listOwners
-      x-vertx-event-bus: owners_petclinic
+      x-vertx-event-bus: petclinic.default
       summary: Lists pet owners
       description: Returns an array of pet owners.
       parameters:
@@ -135,7 +135,7 @@ paths:
       tags:
         - owner
       operationId: getOwner
-      x-vertx-event-bus: owners_petclinic
+      x-vertx-event-bus: petclinic.default
       summary: Get a pet owner by ID
       description: Returns the pet owner or a 404 error.
       parameters:
@@ -189,7 +189,7 @@ paths:
       tags:
         - owner
       operationId: updateOwner
-      x-vertx-event-bus: owners_petclinic
+      x-vertx-event-bus: petclinic.default
       summary: Update a pet owner's details
       description: Updates the pet owner record with the specified details.
       parameters:
@@ -239,7 +239,7 @@ paths:
       tags:
         - owner
       operationId: deleteOwner
-      x-vertx-event-bus: owners_petclinic
+      x-vertx-event-bus: petclinic.default
       summary: Delete an owner by ID
       description: Returns the owner or a 404 error.
       parameters:
@@ -294,7 +294,7 @@ paths:
       tags:
         - pet
       operationId: addPetToOwner
-      x-vertx-event-bus: owners_petclinic
+      x-vertx-event-bus: petclinic.default
       summary: Adds a pet to an owner
       description: Records the details of a new pet.
       parameters:
@@ -344,7 +344,7 @@ paths:
       tags:
         - pet
       operationId: getOwnersPet
-      x-vertx-event-bus: owners_petclinic
+      x-vertx-event-bus: petclinic.default
       summary: Get a pet by ID
       description: Returns the pet or a 404 error.
       parameters:
@@ -407,7 +407,7 @@ paths:
       tags:
         - pet
       operationId: updateOwnersPet
-      x-vertx-event-bus: owners_petclinic
+      x-vertx-event-bus: petclinic.default
       summary: Update a pet's details
       description: Updates the pet record with the specified details.
       parameters:
@@ -462,7 +462,7 @@ paths:
       tags:
         - visit
       operationId: addVisitToOwner
-      x-vertx-event-bus: owners_petclinic
+      x-vertx-event-bus: petclinic.default
       summary: Adds a vet visit
       description: Records the details of a new vet visit.
       parameters:
@@ -521,6 +521,7 @@ paths:
       tags:
         - pettypes
       operationId: listPetTypes
+      x-vertx-event-bus: petclinic.default
       summary: Lists pet types
       description: Returns an array of pet types.
       responses:
@@ -554,6 +555,7 @@ paths:
       tags:
         - pettypes
       operationId: addPetType
+      x-vertx-event-bus: petclinic.default
       summary: Create a pet type
       description: Creates a pet type .
       requestBody:
@@ -605,6 +607,7 @@ paths:
       tags:
         - pettypes
       operationId: getPetType
+      x-vertx-event-bus: petclinic.default
       summary: Get a pet type by ID
       description: Returns the pet type or a 404 error.
       parameters:
@@ -658,6 +661,7 @@ paths:
       tags:
         - pettypes
       operationId: updatePetType
+      x-vertx-event-bus: petclinic.default
       summary: Update a pet type by ID
       description: Returns the pet type or a 404 error.
       parameters:
@@ -718,6 +722,7 @@ paths:
       tags:
         - pettypes
       operationId: deletePetType
+      x-vertx-event-bus: petclinic.default
       summary: Delete a pet type by ID
       description: Returns the pet type or a 404 error.
       parameters:
@@ -773,6 +778,7 @@ paths:
       tags:
         - pet
       operationId: listPets
+      x-vertx-event-bus: petclinic.default
       summary: Lists pet
       description: Returns an array of pet .
       responses:
@@ -806,6 +812,7 @@ paths:
       tags:
         - pet
       operationId: addPet
+      x-vertx-event-bus: petclinic.default
       summary: Create a pet
       description: Creates a pet .
       requestBody:
@@ -857,6 +864,7 @@ paths:
       tags:
         - pet
       operationId: getPet
+      x-vertx-event-bus: petclinic.default
       summary: Get a pet by ID
       description: Returns the pet  or a 404 error.
       parameters:
@@ -910,6 +918,7 @@ paths:
       tags:
         - pet
       operationId: updatePet
+      x-vertx-event-bus: petclinic.default
       summary: Update a pet by ID
       description: Returns the pet or a 404 error.
       parameters:
@@ -970,6 +979,7 @@ paths:
       tags:
         - pet
       operationId: deletePet
+      x-vertx-event-bus: petclinic.default
       summary: Delete a pet by ID
       description: Returns the pet or a 404 error.
       parameters:
@@ -1024,6 +1034,7 @@ paths:
       tags:
         - visit
       operationId: listVisits
+      x-vertx-event-bus: petclinic.default
       summary: Lists visits
       description: Returns an array of visit .
       responses:
@@ -1057,6 +1068,7 @@ paths:
       tags:
         - visit
       operationId: addVisit
+      x-vertx-event-bus: petclinic.default
       summary: Create a visit
       description: Creates a visit.
       requestBody:
@@ -1108,6 +1120,7 @@ paths:
       tags:
         - visit
       operationId: getVisit
+      x-vertx-event-bus: petclinic.default
       summary: Get a visit by ID
       description: Returns the visit or a 404 error.
       parameters:
@@ -1161,6 +1174,7 @@ paths:
       tags:
         - visit
       operationId: updateVisit
+      x-vertx-event-bus: petclinic.default
       summary: Update a visit by ID
       description: Returns the visit or a 404 error.
       parameters:
@@ -1221,6 +1235,7 @@ paths:
       tags:
         - visit
       operationId: deleteVisit
+      x-vertx-event-bus: petclinic.default
       summary: Delete a visit by ID
       description: Returns the visit or a 404 error.
       parameters:
@@ -1275,6 +1290,7 @@ paths:
       tags:
         - specialty
       operationId: listSpecialties
+      x-vertx-event-bus: petclinic.default
       summary: Lists specialties
       description: Returns an array of specialty .
       responses:
@@ -1308,6 +1324,7 @@ paths:
       tags:
         - specialty
       operationId: addSpecialty
+      x-vertx-event-bus: petclinic.default
       summary: Create a specialty
       description: Creates a specialty .
       requestBody:
@@ -1359,6 +1376,7 @@ paths:
       tags:
         - specialty
       operationId: getSpecialty
+      x-vertx-event-bus: petclinic.default
       summary: Get a specialty by ID
       description: Returns the specialty or a 404 error.
       parameters:
@@ -1412,6 +1430,7 @@ paths:
       tags:
         - specialty
       operationId: updateSpecialty
+      x-vertx-event-bus: petclinic.default
       summary: Update a specialty by ID
       description: Returns the specialty or a 404 error.
       parameters:
@@ -1472,6 +1491,7 @@ paths:
       tags:
         - specialty
       operationId: deleteSpecialty
+      x-vertx-event-bus: petclinic.default
       summary: Delete a specialty by ID
       description: Returns the specialty or a 404 error.
       parameters:
@@ -1526,6 +1546,7 @@ paths:
       tags:
         - vet
       operationId: listVets
+      x-vertx-event-bus: petclinic.default
       summary: Lists vets
       description: Returns an array of vets.
       responses:
@@ -1560,6 +1581,7 @@ paths:
       tags:
         - vet
       operationId: addVet
+      x-vertx-event-bus: petclinic.default
       summary: Create a Vet
       description: Creates a vet .
       requestBody:
@@ -1611,6 +1633,7 @@ paths:
       tags:
         - vet
       operationId: getVet
+      x-vertx-event-bus: petclinic.default
       summary: Get a vet by ID
       description: Returns the vet or a 404 error.
       parameters:
@@ -1664,6 +1687,7 @@ paths:
       tags:
         - vet
       operationId: updateVet
+      x-vertx-event-bus: petclinic.default
       summary: Update a vet  by ID
       description: Returns the vet or a 404 error.
       parameters:
@@ -1724,6 +1748,7 @@ paths:
       tags:
         - vets
       operationId: deleteVet
+      x-vertx-event-bus: petclinic.default
       summary: Delete a vet by ID
       description: Returns the vet or a 404 error.
       parameters:
@@ -1778,7 +1803,7 @@ paths:
       tags:
         - user
       operationId: addUser
-      x-vertx-event-bus: users_petclinic
+      x-vertx-event-bus: petclinic.user
       summary: Create a user
       description: Creates a user.
       requestBody:

@@ -25,12 +25,14 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
-import org.example.petclinic.model.User;
 import org.example.petclinic.persistence.OwnersPersistence;
 import org.example.petclinic.persistence.PetPersistence;
+import org.example.petclinic.persistence.PetTypePersistence;
+import org.example.petclinic.persistence.SpecialtyPersistence;
 import org.example.petclinic.persistence.UserPersistence;
-import org.example.petclinic.rest.GlobalErrorHandler;
-import org.example.petclinic.service.OwnersService;
+import org.example.petclinic.persistence.VetPersistence;
+import org.example.petclinic.persistence.VisitPersistence;
+import org.example.petclinic.service.ClinicService;
 import org.example.petclinic.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,18 +49,22 @@ public class PetclinicRestVerticle extends AbstractVerticle {
     serviceBinder = new ServiceBinder(vertx);
     OwnersPersistence ownersPersistence = OwnersPersistence.create(pool);
     PetPersistence petPersistence = PetPersistence.create(pool);
+    PetTypePersistence petTypePersistence = PetTypePersistence.create(pool);
+    VetPersistence vetPersistence = VetPersistence.create(pool);
+    VisitPersistence visitPersistence = VisitPersistence.create(pool);
+    SpecialtyPersistence specialtyPersistence = SpecialtyPersistence.create(pool);
     UserPersistence userPersistence = UserPersistence.create(pool);
 
-    OwnersService ownersService = OwnersService.create(ownersPersistence, petPersistence);
-    consumer = serviceBinder
-        .setAddress("owners_petclinic")
-        .register(OwnersService.class, ownersService);
-
+    ClinicService clinicService = ClinicService.create(ownersPersistence, petPersistence,
+        petTypePersistence, vetPersistence, visitPersistence, specialtyPersistence);
     UserService userService = UserService.create(userPersistence);
-    consumer = serviceBinder
-        .setAddress("users_petclinic")
-        .register(UserService.class, userService);
 
+    consumer = serviceBinder
+        .setAddress("petclinic.default")
+        .register(ClinicService.class, clinicService);
+    consumer = serviceBinder
+        .setAddress("petclinic.user")
+        .register(UserService.class, userService);
   }
 
   private Future<JsonObject> getConfig() {
