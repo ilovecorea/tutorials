@@ -3,6 +3,7 @@ package com.example.petclinic.mapper;
 import com.example.petclinic.model.Specialty;
 import com.example.petclinic.rest.dto.SpecialtyDto;
 import java.util.Collection;
+import java.util.List;
 import org.mapstruct.Mapper;
 
 /**
@@ -15,7 +16,7 @@ public interface SpecialtyMapper {
 
   SpecialtyDto toSpecialtyDto(Specialty specialty);
 
-  Collection<SpecialtyDto> toSpecialtyDtos(Collection<Specialty> specialties);
+  List<SpecialtyDto> toSpecialtyDtos(List<Specialty> specialties);
 
-  Collection<Specialty> toSpecialtys(Collection<SpecialtyDto> specialties);
+  List<Specialty> toSpecialtys(List<SpecialtyDto> specialties);
 }

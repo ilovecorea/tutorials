@@ -1,10 +1,12 @@
 package com.example.petclinic.rest.controller;
 
 import com.example.petclinic.mapper.PetMapper;
+import com.example.petclinic.mapper.VisitMapper;
 import com.example.petclinic.model.Pet;
 import com.example.petclinic.rest.api.PetsApi;
 import com.example.petclinic.rest.dto.PetDto;
 import com.example.petclinic.service.ClinicService;
+import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,16 +24,21 @@ public class PetRestController implements PetsApi {
 
   private final PetMapper petMapper;
 
-  public PetRestController(ClinicService clinicService, PetMapper petMapper) {
+  private final VisitMapper visitMapper;
+
+  public PetRestController(ClinicService clinicService, PetMapper petMapper,
+      VisitMapper visitMapper) {
     this.clinicService = clinicService;
     this.petMapper = petMapper;
+    this.visitMapper = visitMapper;
   }
 
   @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
   @Override
   public Mono<ResponseEntity<PetDto>> getPet(Integer petId, ServerWebExchange exchange) {
     return this.clinicService.findPetById(petId)
-        .map(pet -> ResponseEntity.ok(petMapper.toPetDto(pet)));
+        .map(pet -> ResponseEntity.ok(petMapper.toPetDto(pet)))
+        .defaultIfEmpty(ResponseEntity.notFound().build());
   }
 
   @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
@@ -55,7 +62,7 @@ public class PetRestController implements PetsApi {
           pet.setBirthDate(dto.getBirthDate());
           pet.setName(dto.getName());
           pet.setTypeId(dto.getType().getId());
-          pet.setVisits(null);
+          pet.setVisits(visitMapper.toVisits(dto.getVisits()));
           return this.clinicService.savePet(pet);
         }))
         .map(v -> ResponseEntity.noContent().build());

@@ -4,6 +4,7 @@ import com.example.petclinic.model.Vet;
 import com.example.petclinic.rest.dto.VetDto;
 import com.example.petclinic.rest.dto.VetFieldsDto;
 import java.util.Collection;
+import java.util.List;
 import org.mapstruct.Mapper;
 
 /**
@@ -18,6 +19,6 @@ public interface VetMapper {
 
   VetDto toVetDto(Vet vet);
 
-  Collection<VetDto> toVetDtos(Collection<Vet> vets);
+  List<VetDto> toVetDtos(List<Vet> vets);
 
 }

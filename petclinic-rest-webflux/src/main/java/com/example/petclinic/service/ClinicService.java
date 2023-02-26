@@ -186,7 +186,7 @@ public class ClinicService {
 
   @Transactional
   public Mono<Pet> savePet(Pet pet) {
-    if (pet.getVisits() == null) {
+    if (pet.getVisits() == null || pet.getVisits().isEmpty()) {
       return petRepository.save(pet)
           .onErrorResume(e -> Mono.error(new DataServiceException("savePet", e)));
     } else {

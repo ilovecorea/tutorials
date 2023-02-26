@@ -19,7 +19,7 @@ public interface OwnerMapper {
 
   Owner toOwner(OwnerFieldsDto ownerDto);
 
-  List<OwnerDto> toOwnerDtoCollection(Collection<Owner> ownerCollection);
+  List<OwnerDto> toOwnerDtoCollection(List<Owner> ownerCollection);
 
-  Collection<Owner> toOwners(Collection<OwnerDto> ownerDtos);
+  List<Owner> toOwners(List<OwnerDto> ownerDtos);
 }
