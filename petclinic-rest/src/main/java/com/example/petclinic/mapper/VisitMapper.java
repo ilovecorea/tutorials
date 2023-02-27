@@ -1,11 +1,11 @@
 package com.example.petclinic.mapper;
 
-import java.util.List;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import com.example.petclinic.model.Visit;
 import com.example.petclinic.rest.dto.VisitDto;
 import com.example.petclinic.rest.dto.VisitFieldsDto;
+import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * Map Visit & VisitDto using mapstruct

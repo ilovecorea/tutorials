@@ -1,11 +1,11 @@
 package com.example.petclinic.mapper;
 
-import java.util.List;
-import org.mapstruct.Mapper;
 import com.example.petclinic.model.Role;
 import com.example.petclinic.model.User;
 import com.example.petclinic.rest.dto.RoleDto;
 import com.example.petclinic.rest.dto.UserDto;
+import java.util.List;
+import org.mapstruct.Mapper;
 
 /**
  * Map User/Role & UserDto/RoleDto using mapstruct

@@ -13,7 +13,6 @@ import com.example.petclinic.mapper.SpecialtyMapper;
 import com.example.petclinic.mapper.SpecialtyMapperImpl;
 import com.example.petclinic.mapper.VetMapper;
 import com.example.petclinic.mapper.VetMapperImpl;
-import com.example.petclinic.model.Specialty;
 import com.example.petclinic.model.Vet;
 import com.example.petclinic.rest.advice.ExceptionControllerAdvice;
 import com.example.petclinic.service.ClinicService;
@@ -30,7 +29,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ContextConfiguration(classes = {
     ApplicationTestConfig.class,

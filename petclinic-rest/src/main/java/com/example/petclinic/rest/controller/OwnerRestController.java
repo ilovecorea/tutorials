@@ -14,7 +14,6 @@ import com.example.petclinic.rest.dto.PetFieldsDto;
 import com.example.petclinic.rest.dto.VisitDto;
 import com.example.petclinic.rest.dto.VisitFieldsDto;
 import com.example.petclinic.service.ClinicService;
-import java.util.Collection;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.http.HttpHeaders;
