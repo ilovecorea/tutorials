@@ -220,7 +220,7 @@ public class ClinicService {
   }
 
   public Flux<Owner> findOwnerByLastName(String lastName) {
-    return ownerRepository.findByLastName(lastName);
+    return ownerRepository.findByLastName(databaseClient, lastName);
   }
 
   public Flux<Visit> findVisitsByPetId(int petId) {

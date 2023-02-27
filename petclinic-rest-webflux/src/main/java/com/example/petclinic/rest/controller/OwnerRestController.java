@@ -53,9 +53,10 @@ public class OwnerRestController implements OwnersApi {
   @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
   public Mono<ResponseEntity<Flux<OwnerDto>>> listOwners(String lastName,
       ServerWebExchange exchange) {
-    Flux<Owner> ownerDtoFlux = (StringUtils.isEmpty(lastName))
-        ? this.clinicService.findAllOwners()
-        : this.clinicService.findOwnerByLastName(lastName);
+    Flux<Owner> ownerDtoFlux = this.clinicService.findOwnerByLastName(lastName);
+//    Flux<Owner> ownerDtoFlux = (StringUtils.isEmpty(lastName))
+//        ? this.clinicService.findAllOwners()
+//        : this.clinicService.findOwnerByLastName(lastName);
     return ownerDtoFlux
         .collectList()
         .map(list -> list.isEmpty()
