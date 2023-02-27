@@ -63,7 +63,7 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
         .map(rows -> {
           List<Owner> owners = new ArrayList<>();
           int compareOwnerId = -1;
-          int ownerIndex = 0;
+          int ownerIndex = -1;
           for (Row row : rows) {
             Pet pet = new Pet()
                 .setId(row.getInteger("pet_id"))
@@ -80,12 +80,10 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
                   .setCity(row.getString("city"))
                   .setTelephone(row.getString("telephone"))
                   .setPets(new ArrayList<>());
-              owner.getPets().add(pet);
               owners.add(owner);
               ownerIndex++;
-            } else {
-              owners.get(ownerIndex - 1).getPets().add(pet);
             }
+            owners.get(ownerIndex).getPets().add(pet);
             compareOwnerId = row.getInteger("id");
           }
           return owners;
