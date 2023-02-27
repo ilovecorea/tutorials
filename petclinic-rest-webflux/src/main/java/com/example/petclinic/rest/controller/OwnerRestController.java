@@ -15,7 +15,6 @@ import com.example.petclinic.rest.dto.VisitDto;
 import com.example.petclinic.rest.dto.VisitFieldsDto;
 import com.example.petclinic.service.ClinicService;
 import java.net.URI;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;

@@ -1,7 +1,6 @@
 package com.example.petclinic.config;
 
 import io.netty.handler.codec.http.HttpMethod;
-import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;

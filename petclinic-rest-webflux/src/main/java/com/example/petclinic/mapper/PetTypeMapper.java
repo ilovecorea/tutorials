@@ -3,7 +3,6 @@ package com.example.petclinic.mapper;
 import com.example.petclinic.model.PetType;
 import com.example.petclinic.rest.dto.PetTypeDto;
 import com.example.petclinic.rest.dto.PetTypeFieldsDto;
-import java.util.Collection;
 import java.util.List;
 import org.mapstruct.Mapper;
 

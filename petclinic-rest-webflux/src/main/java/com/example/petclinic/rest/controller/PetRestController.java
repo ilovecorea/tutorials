@@ -6,7 +6,6 @@ import com.example.petclinic.model.Pet;
 import com.example.petclinic.rest.api.PetsApi;
 import com.example.petclinic.rest.dto.PetDto;
 import com.example.petclinic.service.ClinicService;
-import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

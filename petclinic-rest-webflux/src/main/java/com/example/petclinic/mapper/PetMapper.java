@@ -5,7 +5,6 @@ import com.example.petclinic.model.PetType;
 import com.example.petclinic.rest.dto.PetDto;
 import com.example.petclinic.rest.dto.PetFieldsDto;
 import com.example.petclinic.rest.dto.PetTypeDto;
-import java.util.Collection;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
