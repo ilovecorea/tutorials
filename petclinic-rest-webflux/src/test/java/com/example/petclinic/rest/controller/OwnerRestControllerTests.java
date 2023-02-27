@@ -46,14 +46,13 @@ import reactor.core.publisher.Mono;
 @WebFluxTest(OwnerRestController.class)
 @ContextConfiguration(classes = {
     ApplicationTestConfig.class,
-    OwnerMapperImpl.class,
-    VisitMapperImpl.class,
-    PetMapperImpl.class
 })
 @Import(value = {
     GlobalErrorAttributes.class,
     GlobalErrorExceptionHandler.class,
-    OwnerRestController.class
+    OwnerMapperImpl.class,
+    VisitMapperImpl.class,
+    PetMapperImpl.class
 })
 public class OwnerRestControllerTests {
 
@@ -213,7 +212,7 @@ public class OwnerRestControllerTests {
   void testGetAllOwnersSuccess() throws Exception {
     owners.remove(0);
     owners.remove(1);
-    given(this.clinicService.findAllOwners())
+    given(this.clinicService.findOwnerByLastName(any()))
         .willReturn(Flux.fromIterable(ownerMapper.toOwners(owners)));
     webTestClient.get().uri("/api/owners/")
         .accept(MediaType.APPLICATION_JSON)
@@ -232,7 +231,7 @@ public class OwnerRestControllerTests {
   @WithMockUser(roles = "OWNER_ADMIN")
   void testGetAllOwnersNotFound() throws Exception {
     owners.clear();
-    given(this.clinicService.findAllOwners())
+    given(this.clinicService.findOwnerByLastName(any()))
         .willReturn(Flux.fromIterable(ownerMapper.toOwners(owners)));
     webTestClient.get().uri("/api/owners/")
         .accept(MediaType.APPLICATION_JSON)

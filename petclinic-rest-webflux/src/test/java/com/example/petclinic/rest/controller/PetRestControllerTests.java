@@ -38,16 +38,15 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(SpringExtension.class)
-@WebFluxTest(OwnerRestController.class)
+@WebFluxTest(PetRestController.class)
 @ContextConfiguration(classes = {
     ApplicationTestConfig.class,
-    PetMapperImpl.class,
-    VisitMapperImpl.class
 })
 @Import(value = {
     GlobalErrorAttributes.class,
     GlobalErrorExceptionHandler.class,
-    PetRestController.class
+    PetMapperImpl.class,
+    VisitMapperImpl.class,
 })
 public class PetRestControllerTests {
 

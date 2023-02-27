@@ -31,12 +31,11 @@ import reactor.core.publisher.Mono;
 @WebFluxTest(SpecialtyRestController.class)
 @ContextConfiguration(classes = {
     ApplicationTestConfig.class,
-    SpecialtyMapperImpl.class
 })
 @Import(value = {
     GlobalErrorAttributes.class,
     GlobalErrorExceptionHandler.class,
-    SpecialtyRestController.class
+    SpecialtyMapperImpl.class
 })
 public class SpecialtyRestControllerTests {
 
@@ -230,3 +229,4 @@ public class SpecialtyRestControllerTests {
         .exchange().expectStatus().isNotFound();
   }
 }
+

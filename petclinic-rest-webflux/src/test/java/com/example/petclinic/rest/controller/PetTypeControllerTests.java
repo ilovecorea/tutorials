@@ -36,12 +36,11 @@ import reactor.core.publisher.Mono;
 @WebFluxTest(PetTypeRestController.class)
 @ContextConfiguration(classes = {
     ApplicationTestConfig.class,
-    PetTypeMapperImpl.class
 })
 @Import(value = {
     GlobalErrorAttributes.class,
     GlobalErrorExceptionHandler.class,
-    PetTypeRestController.class
+    PetTypeMapperImpl.class
 })
 public class PetTypeControllerTests {
 
