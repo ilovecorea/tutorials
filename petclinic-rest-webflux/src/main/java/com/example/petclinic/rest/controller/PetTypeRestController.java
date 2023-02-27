@@ -40,7 +40,8 @@ public class PetTypeRestController implements PettypesApi {
   public Mono<ResponseEntity<PetTypeDto>> getPetType(Integer petTypeId,
       ServerWebExchange exchange) {
     return this.clinicService.findPetTypeById(petTypeId)
-        .map(petType -> ResponseEntity.ok(petTypeMapper.toPetTypeDto(petType)));
+        .map(petType -> ResponseEntity.ok(petTypeMapper.toPetTypeDto(petType)))
+        .defaultIfEmpty(ResponseEntity.notFound().build());
   }
 
   @Override
