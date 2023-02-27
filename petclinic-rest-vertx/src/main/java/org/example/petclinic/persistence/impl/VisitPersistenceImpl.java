@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import org.example.petclinic.model.VetParametersMapper;
-import org.example.petclinic.model.VetRowMapper;
 import org.example.petclinic.model.Visit;
 import org.example.petclinic.model.VisitParametersMapper;
 import org.example.petclinic.model.VisitRowMapper;

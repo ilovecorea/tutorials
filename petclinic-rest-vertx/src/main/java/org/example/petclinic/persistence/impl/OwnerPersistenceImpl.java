@@ -1,8 +1,6 @@
 package org.example.petclinic.persistence.impl;
 
-import ch.qos.logback.core.joran.conditional.PropertyWrapperForScripts;
 import io.vertx.core.Future;
-import io.vertx.core.json.JsonObject;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.templates.SqlTemplate;
@@ -12,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.StringUtils;
 import org.example.petclinic.model.Owner;
 import org.example.petclinic.model.OwnerParametersMapper;

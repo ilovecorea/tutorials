@@ -2,7 +2,6 @@ package org.example.petclinic.persistence.impl;
 
 import io.vertx.core.Future;
 import io.vertx.sqlclient.Pool;
-import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.templates.SqlTemplate;
 import java.util.Collections;
 import java.util.List;

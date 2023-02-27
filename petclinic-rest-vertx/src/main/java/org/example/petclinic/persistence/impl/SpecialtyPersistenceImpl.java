@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import org.example.petclinic.model.OwnerParametersMapper;
 import org.example.petclinic.model.Specialty;
 import org.example.petclinic.model.SpecialtyParametersMapper;
 import org.example.petclinic.model.SpecialtyRowMapper;

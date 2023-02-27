@@ -1,7 +1,7 @@
 package org.example.petclinic.rest;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
