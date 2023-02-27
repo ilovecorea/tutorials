@@ -1,9 +1,14 @@
 package org.example.petclinic.persistence.impl;
 
+import ch.qos.logback.core.joran.conditional.PropertyWrapperForScripts;
 import io.vertx.core.Future;
+import io.vertx.core.json.JsonObject;
 import io.vertx.sqlclient.Pool;
+import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.templates.SqlTemplate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.example.petclinic.model.Owner;
 import org.example.petclinic.model.OwnerParametersMapper;
 import org.example.petclinic.model.OwnerRowMapper;
+import org.example.petclinic.model.Pet;
 import org.example.petclinic.persistence.OwnersPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,38 +34,62 @@ public class OwnerPersistenceImpl implements OwnersPersistence {
   }
 
   @Override
-  public Future<List<Owner>> findAll() {
-    String sql = """
-        select
-          id, first_name, last_name, address, city, telephone
-        from owners
-        """.trim();
-    return SqlTemplate
-        .forQuery(pool, sql)
-        .mapTo(OwnerRowMapper.INSTANCE)
-        .execute(Map.of())
-        .map(owners -> StreamSupport.stream(owners.spliterator(), false)
-            .collect(Collectors.toList()));
-  }
-
-  @Override
   public Future<List<Owner>> findByLastName(String lastName) {
-    log.debug("## lastName:{}", lastName);
-    if (StringUtils.isEmpty(lastName)) {
-      return findAll();
-    }
+    Map<String, Object> params = new HashMap<>();
     String sql = """
         select
-          id, first_name, last_name, address, city, telephone
-        from owners
-        where last_name = #{last_name}
+          o.id,
+          o.first_name,
+          o.last_name,
+          o.address,
+          o.city,
+          o.telephone,
+          p.id as pet_id,
+          p.name,
+          to_char(p.birth_date, 'YYYY-MM-DD') as birth_date,
+          p.type_id,
+          p.owner_id
+        from owners o
+        inner join pets p on p.owner_id = o.id
         """.trim();
+    if (StringUtils.isNotBlank(lastName)) {
+      sql = sql + " where o.last_name = #{last_name}";
+      params.put("last_name", lastName);
+    }
+    sql = sql + " order by o.id, p.id";
     return SqlTemplate
         .forQuery(pool, sql)
-        .mapTo(OwnerRowMapper.INSTANCE)
-        .execute(Map.of("last_name", lastName))
-        .map(owners -> StreamSupport.stream(owners.spliterator(), false)
-            .collect(Collectors.toList()));
+        .execute(params)
+        .map(rows -> {
+          List<Owner> owners = new ArrayList<>();
+          int compareOwnerId = -1;
+          int ownerIndex = 0;
+          for (Row row : rows) {
+            Pet pet = new Pet()
+                .setId(row.getInteger("pet_id"))
+                .setName(row.getString("name"))
+                .setBirthDate(row.getString("birth_date"))
+                .setTypeId(row.getInteger("type_id"))
+                .setOwnerId(row.getInteger("owner_id"));
+            if (compareOwnerId != row.getInteger("id")) {
+              Owner owner = new Owner()
+                  .setId(row.getInteger("id"))
+                  .setFirstName(row.getString("first_name"))
+                  .setLastName(row.getString("last_name"))
+                  .setAddress(row.getString("address"))
+                  .setCity(row.getString("city"))
+                  .setTelephone(row.getString("telephone"))
+                  .setPets(new ArrayList<>());
+              owner.getPets().add(pet);
+              owners.add(owner);
+              ownerIndex++;
+            } else {
+              owners.get(ownerIndex - 1).getPets().add(pet);
+            }
+            compareOwnerId = row.getInteger("id");
+          }
+          return owners;
+        });
   }
 
   @Override

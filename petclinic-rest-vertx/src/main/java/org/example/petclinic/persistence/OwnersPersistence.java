@@ -13,7 +13,7 @@ public interface OwnersPersistence {
     return new OwnerPersistenceImpl(pool);
   }
 
-  Future<List<Owner>> findAll();
+//  Future<List<Owner>> findAll();
 
   Future<List<Owner>> findByLastName(String lastName);
 

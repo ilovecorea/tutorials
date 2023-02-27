@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.*;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
+import io.vertx.junit5.Checkpoint;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +22,8 @@ import org.slf4j.LoggerFactory;
 public class PetclinicTests {
 
   private static final Logger log = LoggerFactory.getLogger(PetclinicTests.class);
+
+  private static final String PATH = "/petclinic/api";
 
   @RegisterExtension
   static PostgresExtension postgresExtension = new PostgresExtension(5432);
@@ -48,7 +51,7 @@ public class PetclinicTests {
         .put("address", "4, Evans Streets")
         .put("city", "Wollongong")
         .put("telephone", "444444444");
-    client.post(PORT, HOST, "/owners")
+    client.post(PORT, HOST, PATH + "/owners")
         .sendJsonObject(json)
         .onComplete(testContext.succeeding(res -> testContext.verify(() -> {
           if (res.statusCode() == 201) {
@@ -65,22 +68,23 @@ public class PetclinicTests {
 
   @Test
   void listOwners(Vertx vertx, VertxTestContext testContext) throws Throwable {
-    client.get(PORT, HOST, "/owners")
+    Checkpoint checkpoint = testContext.checkpoint(2);
+    client.get(PORT, HOST, PATH + "/owners")
         .send()
         .onComplete(testContext.succeeding(res -> testContext.verify(() -> {
           if (res.statusCode() == 200 && res.bodyAsJsonArray().size() == 10) {
-            testContext.completeNow();
+            checkpoint.flag();
           } else {
             testContext.failNow("Status " + res.statusCode());
           }
         })));
 
-    client.get(PORT, HOST, "/owners")
+    client.get(PORT, HOST, PATH + "/owners")
         .addQueryParam("lastName", "Davis")
         .send()
         .onComplete(testContext.succeeding(res -> testContext.verify(() -> {
           if (res.statusCode() == 200 && res.bodyAsJsonArray().size() == 2) {
-            testContext.completeNow();
+            checkpoint.flag();
           } else {
             testContext.failNow("Status " + res.statusCode());
           }
@@ -114,7 +118,7 @@ public class PetclinicTests {
         .put("type", new JsonObject()
             .put("id", 1)
             .put("name", "cat"));
-    client.post(PORT, HOST, "/owners/1/pets")
+    client.post(PORT, HOST, PATH + "/owners/1/pets")
         .sendJsonObject(json)
         .onComplete(testContext.succeeding(res -> testContext.verify(() -> {
           if (res.statusCode() == 201) {
