@@ -36,7 +36,7 @@ public class VetRestController implements VetsApi {
     return vetFlux
         .collectList()
         .map(vets -> vets.isEmpty()
-            ? ResponseEntity.noContent().build()
+            ? ResponseEntity.notFound().build()
             : ResponseEntity.ok(vetFlux.map(vet -> vetMapper.toVetDto(vet))));
   }
 
