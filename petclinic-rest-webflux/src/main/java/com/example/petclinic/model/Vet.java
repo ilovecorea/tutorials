@@ -1,5 +1,6 @@
 package com.example.petclinic.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class Vet implements Persistable<Integer> {
     private String lastName;
 
     @Transient
-    private List<Specialty> specialties;
+    private List<Specialty> specialties = new ArrayList<>();
 
     public boolean isNew() {
         return this.id == null;

@@ -54,7 +54,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/owners:
+  /owners:
     post:
       tags:
         - owner
@@ -130,7 +130,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/owners/{ownerId}:
+  /owners/{ownerId}:
     get:
       tags:
         - owner
@@ -289,7 +289,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/owners/{ownerId}/pets:
+  /owners/{ownerId}/pets:
     post:
       tags:
         - pet
@@ -339,7 +339,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/owners/{ownerId}/pets/{petId}:
+  /owners/{ownerId}/pets/{petId}:
     get:
       tags:
         - pet
@@ -457,7 +457,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/owners/{ownerId}/pets/{petId}/visits:
+  /owners/{ownerId}/pets/{petId}/visits:
     post:
       tags:
         - visit
@@ -516,7 +516,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/pettypes:
+  /pettypes:
     get:
       tags:
         - pettypes
@@ -602,7 +602,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/pettypes/{petTypeId}:
+  /pettypes/{petTypeId}:
     get:
       tags:
         - pettypes
@@ -773,7 +773,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestError'
 
-  /petclinic/api/pets:
+  /pets:
     get:
       tags:
         - pet
@@ -859,7 +859,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/pets/{petId}:
+  /pets/{petId}:
     get:
       tags:
         - pet
@@ -1029,7 +1029,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/visits:
+  /visits:
     get:
       tags:
         - visit
@@ -1115,7 +1115,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/visits/{visitId}:
+  /visits/{visitId}:
     get:
       tags:
         - visit
@@ -1285,7 +1285,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/specialties:
+  /specialties:
     get:
       tags:
         - specialty
@@ -1371,7 +1371,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/specialties/{specialtyId}:
+  /specialties/{specialtyId}:
     get:
       tags:
         - specialty
@@ -1541,7 +1541,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/vets:
+  /vets:
     get:
       tags:
         - vet
@@ -1628,7 +1628,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/vets/{vetId}:
+  /vets/{vetId}:
     get:
       tags:
         - vet
@@ -1798,7 +1798,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestError'
-  /petclinic/api/users:
+  /users:
     post:
       tags:
         - user

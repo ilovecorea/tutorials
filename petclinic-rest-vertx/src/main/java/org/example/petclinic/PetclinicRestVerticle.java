@@ -41,6 +41,7 @@ public class PetclinicRestVerticle extends AbstractVerticle {
 
   private static final Logger log = LoggerFactory.getLogger(PetclinicRestVerticle.class);
 
+  private final static String ROOT_PATH = "/petclinic/api";
   HttpServer server;
   ServiceBinder serviceBinder;
   MessageConsumer<JsonObject> consumer;
@@ -99,7 +100,13 @@ public class PetclinicRestVerticle extends AbstractVerticle {
           routerBuilder.mountServicesFromExtensions();
           routerBuilder.rootHandler(rc -> {
             rc.response().headers().add("Access-Control-Allow-Origin", "*");
-            rc.next();
+            String path = rc.request().path();
+            //context root 경로를 치환한다.
+            if (path.startsWith(ROOT_PATH)) {
+              rc.reroute(path.replace(ROOT_PATH, ""));
+            } else {
+              rc.next();
+            }
           });
           Router router = routerBuilder.createRouter();
           router.errorHandler(400, rc -> {

@@ -2,8 +2,10 @@ package com.example.petclinic.rest.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -142,7 +144,6 @@ public class VetRestControllerTests {
     newVet.setId(999);
     ObjectMapper mapper = new ObjectMapper();
     String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
-    System.out.println("newVetAsJSON:" + newVetAsJSON);
     given(this.clinicService.saveVet(any())).willReturn(Mono.just(newVet));
     webTestClient.post().uri("/api/vets/")
         .accept(MediaType.APPLICATION_JSON)
@@ -150,5 +151,88 @@ public class VetRestControllerTests {
         .body(Mono.just(newVetAsJSON), String.class)
         .exchange()
         .expectStatus().isCreated();
+  }
+
+  @Test
+  @WithMockUser(roles = "VET_ADMIN")
+  void testCreateVetError() throws Exception {
+    Vet newVet = vets.get(0);
+    newVet.setId(null);
+    newVet.setFirstName(null);
+    ObjectMapper mapper = new ObjectMapper();
+    String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
+    webTestClient.post().uri("/api/vets/")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Mono.just(newVetAsJSON), String.class)
+        .exchange()
+        .expectStatus().isBadRequest();
+  }
+
+  @Test
+  @WithMockUser(roles = "VET_ADMIN")
+  void testUpdateVetSuccess() throws Exception {
+    given(this.clinicService.findVetById(1)).willReturn(Mono.just(vets.get(0)));
+    Vet newVet = vets.get(0);
+    newVet.setFirstName("James");
+    ObjectMapper mapper = new ObjectMapper();
+    String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
+    given(this.clinicService.saveVet(any())).willReturn(Mono.just(newVet));
+    webTestClient.put().uri("/api/vets/1")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Mono.just(newVetAsJSON), String.class)
+        .exchange()
+        .expectStatus().isNoContent();
+
+    webTestClient.get().uri("/api/vets/1")
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody()
+        .jsonPath("$.id").isEqualTo(1)
+        .jsonPath("$.firstName").isEqualTo("James");
+  }
+
+  @Test
+  @WithMockUser(roles = "VET_ADMIN")
+  void testUpdateVetError() throws Exception {
+    Vet newVet = vets.get(0);
+    newVet.setFirstName(null);
+    ObjectMapper mapper = new ObjectMapper();
+    String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
+    webTestClient.put().uri("/api/vets/1")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus()
+        .isBadRequest();
+  }
+
+  @Test
+  @WithMockUser(roles = "VET_ADMIN")
+  void testDeleteVetSuccess() throws Exception {
+    Vet newVet = vets.get(0);
+    ObjectMapper mapper = new ObjectMapper();
+    String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
+    given(this.clinicService.findVetById(1)).willReturn(Mono.just(vets.get(0)));
+    given(this.clinicService.deleteVet(any())).willReturn(Mono.empty());
+    webTestClient.delete().uri("/api/vets/1")
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus().isNoContent();
+  }
+
+  @Test
+  @WithMockUser(roles = "VET_ADMIN")
+  void testDeleteVetError() throws Exception {
+    Vet newVet = vets.get(0);
+    ObjectMapper mapper = new ObjectMapper();
+    String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
+    given(this.clinicService.findVetById(999)).willReturn(Mono.empty());
+    webTestClient.delete().uri("/api/vets/999")
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus().isNotFound();
   }
 }

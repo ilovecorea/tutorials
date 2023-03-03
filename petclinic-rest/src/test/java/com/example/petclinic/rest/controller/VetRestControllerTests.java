@@ -54,7 +54,7 @@ public class VetRestControllerTests {
   private List<Vet> vets;
 
   @BeforeEach
-  void initVets(){
+  void initVets() {
     vets = new ArrayList<Vet>();
 
     Vet vet = new Vet();
@@ -77,7 +77,7 @@ public class VetRestControllerTests {
   }
 
   @Test
-  @WithMockUser(roles="VET_ADMIN")
+  @WithMockUser(roles = "VET_ADMIN")
   void testGetVetSuccess() throws Exception {
     given(this.clinicService.findVetById(1)).willReturn(vets.get(0));
     this.mockMvc.perform(get("/api/vets/1")
@@ -89,7 +89,7 @@ public class VetRestControllerTests {
   }
 
   @Test
-  @WithMockUser(roles="VET_ADMIN")
+  @WithMockUser(roles = "VET_ADMIN")
   void testGetVetNotFound() throws Exception {
     given(this.clinicService.findVetById(-1)).willReturn(null);
     this.mockMvc.perform(get("/api/vets/999")
@@ -98,7 +98,7 @@ public class VetRestControllerTests {
   }
 
   @Test
-  @WithMockUser(roles="VET_ADMIN")
+  @WithMockUser(roles = "VET_ADMIN")
   void testGetAllVetsSuccess() throws Exception {
     given(this.clinicService.findAllVets()).willReturn(vets);
     this.mockMvc.perform(get("/api/vets/")
@@ -112,7 +112,7 @@ public class VetRestControllerTests {
   }
 
   @Test
-  @WithMockUser(roles="VET_ADMIN")
+  @WithMockUser(roles = "VET_ADMIN")
   void testGetAllVetsNotFound() throws Exception {
     vets.clear();
     given(this.clinicService.findAllVets()).willReturn(vets);
@@ -122,19 +122,21 @@ public class VetRestControllerTests {
   }
 
   @Test
-  @WithMockUser(roles="VET_ADMIN")
+  @WithMockUser(roles = "VET_ADMIN")
   void testCreateVetSuccess() throws Exception {
     Vet newVet = vets.get(0);
     newVet.setId(999);
     ObjectMapper mapper = new ObjectMapper();
     String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
     this.mockMvc.perform(post("/api/vets/")
-            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .content(newVetAsJSON)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isCreated());
   }
 
   @Test
-  @WithMockUser(roles="VET_ADMIN")
+  @WithMockUser(roles = "VET_ADMIN")
   void testCreateVetError() throws Exception {
     Vet newVet = vets.get(0);
     newVet.setId(null);
@@ -142,12 +144,13 @@ public class VetRestControllerTests {
     ObjectMapper mapper = new ObjectMapper();
     String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
     this.mockMvc.perform(post("/api/vets/")
-            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isBadRequest());
   }
 
   @Test
-  @WithMockUser(roles="VET_ADMIN")
+  @WithMockUser(roles = "VET_ADMIN")
   void testUpdateVetSuccess() throws Exception {
     given(this.clinicService.findVetById(1)).willReturn(vets.get(0));
     Vet newVet = vets.get(0);
@@ -155,7 +158,8 @@ public class VetRestControllerTests {
     ObjectMapper mapper = new ObjectMapper();
     String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
     this.mockMvc.perform(put("/api/vets/1")
-            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(content().contentType("application/json"))
         .andExpect(status().isNoContent());
 
@@ -169,38 +173,41 @@ public class VetRestControllerTests {
   }
 
   @Test
-  @WithMockUser(roles="VET_ADMIN")
+  @WithMockUser(roles = "VET_ADMIN")
   void testUpdateVetError() throws Exception {
     Vet newVet = vets.get(0);
     newVet.setFirstName(null);
     ObjectMapper mapper = new ObjectMapper();
     String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
     this.mockMvc.perform(put("/api/vets/1")
-            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isBadRequest());
   }
 
   @Test
-  @WithMockUser(roles="VET_ADMIN")
+  @WithMockUser(roles = "VET_ADMIN")
   void testDeleteVetSuccess() throws Exception {
     Vet newVet = vets.get(0);
     ObjectMapper mapper = new ObjectMapper();
     String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
     given(this.clinicService.findVetById(1)).willReturn(vets.get(0));
     this.mockMvc.perform(delete("/api/vets/1")
-            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isNoContent());
   }
 
   @Test
-  @WithMockUser(roles="VET_ADMIN")
+  @WithMockUser(roles = "VET_ADMIN")
   void testDeleteVetError() throws Exception {
     Vet newVet = vets.get(0);
     ObjectMapper mapper = new ObjectMapper();
     String newVetAsJSON = mapper.writeValueAsString(vetMapper.toVetDto(newVet));
     given(this.clinicService.findVetById(-1)).willReturn(null);
     this.mockMvc.perform(delete("/api/vets/999")
-            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isNotFound());
   }
 }
