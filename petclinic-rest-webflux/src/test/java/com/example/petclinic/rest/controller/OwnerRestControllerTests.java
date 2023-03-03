@@ -1,7 +1,6 @@
 package com.example.petclinic.rest.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 
 import com.example.petclinic.mapper.OwnerMapper;

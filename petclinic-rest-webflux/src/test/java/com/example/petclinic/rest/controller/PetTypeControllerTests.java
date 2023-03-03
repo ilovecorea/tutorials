@@ -2,12 +2,7 @@ package com.example.petclinic.rest.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.petclinic.mapper.PetMapper;
 import com.example.petclinic.mapper.PetTypeMapper;
 import com.example.petclinic.mapper.PetTypeMapperImpl;
 import com.example.petclinic.model.PetType;
