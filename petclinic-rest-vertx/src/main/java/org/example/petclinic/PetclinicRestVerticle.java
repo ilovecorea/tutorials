@@ -125,18 +125,21 @@ public class PetclinicRestVerticle extends AbstractVerticle {
   }
 
   private void createDatabase() {
-    try {
-      Connection connection = DriverManager.getConnection(
-          "jdbc:postgresql://localhost:5432/petclinic", "postgres", "petclinic");
-      JdbcConnection jdbcConnection = new JdbcConnection(connection);
-      Database database = DatabaseFactory.getInstance()
-          .findCorrectDatabaseImplementation(jdbcConnection);
-      Liquibase liquibase = new Liquibase("liquibase/master.yml",
-          new ClassLoaderResourceAccessor(), database);
-      liquibase.update((Contexts) null);
-      log.info("Database migrations completed");
-    } catch (Exception e) {
-      log.error("Faild to run database migrations", e);
+    String profile = System.getProperty("activeProfile");
+    if (profile.equals("local")) {
+      try {
+        Connection connection = DriverManager.getConnection(
+            "jdbc:postgresql://localhost:5432/petclinic", "postgres", "petclinic");
+        JdbcConnection jdbcConnection = new JdbcConnection(connection);
+        Database database = DatabaseFactory.getInstance()
+            .findCorrectDatabaseImplementation(jdbcConnection);
+        Liquibase liquibase = new Liquibase("liquibase/master.yml",
+            new ClassLoaderResourceAccessor(), database);
+        liquibase.update((Contexts) null);
+        log.info("Database migrations completed");
+      } catch (Exception e) {
+        log.error("Faild to run database migrations", e);
+      }
     }
   }
 
