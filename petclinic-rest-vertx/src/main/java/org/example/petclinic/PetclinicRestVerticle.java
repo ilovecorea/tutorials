@@ -4,8 +4,8 @@ import io.vertx.config.ConfigRetriever;
 import io.vertx.config.ConfigRetrieverOptions;
 import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
-import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.http.HttpServer;
@@ -40,14 +40,17 @@ import org.slf4j.LoggerFactory;
 public class PetclinicRestVerticle extends AbstractVerticle {
 
   private static final Logger log = LoggerFactory.getLogger(PetclinicRestVerticle.class);
-
-  private final static String ROOT_PATH = "/petclinic/api";
   HttpServer server;
   ServiceBinder serviceBinder;
   MessageConsumer<JsonObject> consumer;
+  JsonObject config;
 
+  /**
+   * web service binding
+   */
   private void bindService(PgPool pool) {
     serviceBinder = new ServiceBinder(vertx);
+    //create persistence
     OwnersPersistence ownersPersistence = OwnersPersistence.create(pool);
     PetPersistence petPersistence = PetPersistence.create(pool);
     PetTypePersistence petTypePersistence = PetTypePersistence.create(pool);
@@ -55,11 +58,11 @@ public class PetclinicRestVerticle extends AbstractVerticle {
     VisitPersistence visitPersistence = VisitPersistence.create(pool);
     SpecialtyPersistence specialtyPersistence = SpecialtyPersistence.create(pool);
     UserPersistence userPersistence = UserPersistence.create(pool);
-
+    //create service
     ClinicService clinicService = ClinicService.create(ownersPersistence, petPersistence,
         petTypePersistence, vetPersistence, visitPersistence, specialtyPersistence);
     UserService userService = UserService.create(userPersistence);
-
+    //bind service
     consumer = serviceBinder
         .setAddress("petclinic.default")
         .register(ClinicService.class, clinicService);
@@ -68,19 +71,10 @@ public class PetclinicRestVerticle extends AbstractVerticle {
         .register(UserService.class, userService);
   }
 
-  private Future<JsonObject> getConfig() {
-    String activeProfile = System.getProperty("activeProfile");
-    String configPath = String.format("application-%s.yaml", activeProfile);
-    ConfigStoreOptions store = new ConfigStoreOptions()
-        .setType("file")
-        .setFormat("yaml")
-        .setConfig(new JsonObject().put("path", configPath));
-    ConfigRetriever retriever = ConfigRetriever.create(vertx,
-        new ConfigRetrieverOptions().addStore(store));
-    return retriever.getConfig();
-  }
-
-  private PgPool createPgPool(JsonObject config) {
+  /**
+   * create pg pool
+   */
+  private PgPool createPgPool() {
     JsonObject pg = config.getJsonObject("pg");
     PgConnectOptions connectOptions = new PgConnectOptions()
         .setPort(pg.getInteger("port"))
@@ -93,7 +87,11 @@ public class PetclinicRestVerticle extends AbstractVerticle {
     return PgPool.pool(vertx, connectOptions, poolOptions);
   }
 
+  /**
+   * start http server
+   */
   private Future<Void> startHttpServer() {
+    String contextPath = config.getString("base-path");
     return RouterBuilder.create(this.vertx, "openapi.yml")
         .onFailure(Throwable::printStackTrace)
         .compose(routerBuilder -> {
@@ -102,61 +100,98 @@ public class PetclinicRestVerticle extends AbstractVerticle {
             rc.response().headers().add("Access-Control-Allow-Origin", "*");
             String path = rc.request().path();
             //context root 경로를 치환한다.
-            if (path.startsWith(ROOT_PATH)) {
-              rc.reroute(path.replace(ROOT_PATH, ""));
+            if (path.startsWith(contextPath)) {
+              rc.reroute(path.replace(contextPath, ""));
             } else {
               rc.next();
             }
           });
+
           Router router = routerBuilder.createRouter();
-          router.errorHandler(400, rc -> {
-            log.debug("Bad Request", rc.failure());
-            rc.response()
-                .setStatusCode(400)
-                .setStatusMessage(rc.failure().getMessage());
-          });
+          router.errorHandler(400, rc -> rc.response()
+                  .setStatusCode(400)
+                  .setStatusMessage(rc.failure().getMessage())
+                  .end())
+              .errorHandler(404, rc -> rc.response()
+                  .setStatusCode(404)
+                  .setStatusMessage("Resources not found")
+                  .end())
+              .errorHandler(401, rc -> rc.response()
+                  .setStatusCode(401)
+                  .setStatusMessage("Unauthorized")
+                  .end())
+              .errorHandler(500, rc -> rc.response()
+                  .setStatusCode(500)
+                  .setStatusMessage("Internal server error")
+                  .end());
+
           server = vertx.createHttpServer(
-              new HttpServerOptions()
-                  .setPort(9966)
-                  .setHost("localhost"))
+                  new HttpServerOptions()
+                      .setPort(9966)
+                      .setHost("localhost"))
               .requestHandler(router);
           return server.listen().mapEmpty();
         });
   }
 
+  /**
+   * create table & insert data
+   */
   private void createDatabase() {
-    String profile = System.getProperty("activeProfile");
-    if (profile.equals("local")) {
-      try {
-        Connection connection = DriverManager.getConnection(
-            "jdbc:postgresql://localhost:5432/petclinic", "postgres", "petclinic");
-        JdbcConnection jdbcConnection = new JdbcConnection(connection);
-        Database database = DatabaseFactory.getInstance()
-            .findCorrectDatabaseImplementation(jdbcConnection);
-        Liquibase liquibase = new Liquibase("liquibase/master.yml",
-            new ClassLoaderResourceAccessor(), database);
-        liquibase.update((Contexts) null);
-        log.info("Database migrations completed");
-      } catch (Exception e) {
-        log.error("Faild to run database migrations", e);
-      }
+    try {
+      JsonObject pg = config.getJsonObject("pg");
+      Connection connection = DriverManager.getConnection(
+          String.format("jdbc:postgresql://%s:%d/%s",
+              pg.getString("host"),
+              pg.getInteger("port"),
+              pg.getString("database")),
+          pg.getString("username"),
+          pg.getString("password"));
+      JdbcConnection jdbcConnection = new JdbcConnection(connection);
+      Database database = DatabaseFactory.getInstance()
+          .findCorrectDatabaseImplementation(jdbcConnection);
+      Liquibase liquibase = new Liquibase("liquibase/master.yml",
+          new ClassLoaderResourceAccessor(), database);
+      liquibase.update((Contexts) null);
+      log.info("Database migrations completed");
+    } catch (Exception e) {
+      log.error("Faild to run database migrations", e);
     }
   }
 
   @Override
-  public void start(Promise<Void> promise) {
+  public void start() {
+    this.config = vertx.getOrCreateContext().config();
     createDatabase();
-    getConfig()
-        .compose(config -> {
-          bindService(createPgPool(config));
-          return Future.succeededFuture();
-        })
-        .compose(v -> startHttpServer())
-        .onComplete(promise);
+    bindService(createPgPool());
+    startHttpServer();
   }
 
+  /**
+   * Main
+   *
+   * @param args
+   */
   public static void main(String[] args) {
     Vertx vertx = Vertx.vertx();
-    vertx.deployVerticle(new PetclinicRestVerticle());
+    String activeProfile = System.getProperty("activeProfile");
+    String configPath = String.format("application-%s.yaml", activeProfile);
+    ConfigStoreOptions store = new ConfigStoreOptions()
+        .setType("file")
+        .setFormat("yaml")
+        .setConfig(new JsonObject().put("path", configPath));
+    ConfigRetriever retriever = ConfigRetriever.create(vertx,
+        new ConfigRetrieverOptions().addStore(store));
+    retriever.getConfig()
+        .onComplete(ar -> {
+          if (ar.succeeded()) {
+            DeploymentOptions options = new DeploymentOptions().setConfig(ar.result());
+            vertx.deployVerticle(PetclinicRestVerticle.class.getName(), options);
+          } else {
+            ar.cause().printStackTrace();
+            System.exit(1);
+          }
+        });
+
   }
 }

@@ -1,5 +1,5 @@
 profile: local
-base-path: /petclinic
+base-path: /petclinic/api
 pg:
   port: 5432
   host: localhost
