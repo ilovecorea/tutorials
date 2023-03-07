@@ -16,8 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+//@Transactional
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles({"local"})
 public class LifeCycleEventTests extends BaseServiceTests {
@@ -76,5 +78,24 @@ public class LifeCycleEventTests extends BaseServiceTests {
     petTypeRepository.deleteById(ids.get(1));
     List<PetType> petTypes = petTypeRepository.findAll();
     assertThat(petTypes.size()).isEqualTo(6);
+  }
+
+  @Test
+  @Transactional
+  void test5() {
+    log.debug("============= 테스트5 ============");
+    PetType petType = new PetType();
+    petType.setName("강아지");
+    petTypeRepository.save(petType);
+    log.debug("저장된 id:{}", petType.getId());
+    ids.add(petType.getId());
+    petType.setName("푸들");
+
+    //flush를 수행하면 update 쿼리가 수행된다.
+//    petTypeRepository.flush();
+
+    PetType pet1 = petTypeRepository.findById(petType.getId()).get();
+    assertThat(pet1.getName()).isEqualTo("푸들");
+
   }
 }

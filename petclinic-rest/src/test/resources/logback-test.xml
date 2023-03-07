@@ -13,6 +13,8 @@
   <logger name="com.example.petclinic" level="DEBUG"/>
   <logger name="org.hibernate.sql" level="DEBUG"/>
   <logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
+  <logger name="org.springframework.transaction" level="DEBUG"/>
+  <logger name="org.springframework.orm.jpa" level="DEBUG"/>
   <logger name="org.testcontainers" level="INFO"/>
   <logger name="com.github.dockerjava" level="WARN"/>
   <logger name="com.github.dockerjava.zerodep.shaded.org.apache.hc.client5.http.wire" level="OFF"/>
