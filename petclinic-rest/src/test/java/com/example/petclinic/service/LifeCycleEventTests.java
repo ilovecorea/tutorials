@@ -90,12 +90,27 @@ public class LifeCycleEventTests extends BaseServiceTests {
     log.debug("저장된 id:{}", petType.getId());
     ids.add(petType.getId());
     petType.setName("푸들");
-
-    //flush를 수행하면 update 쿼리가 수행된다.
-//    petTypeRepository.flush();
-
     PetType pet1 = petTypeRepository.findById(petType.getId()).get();
     assertThat(pet1.getName()).isEqualTo("푸들");
+
+  }
+
+  @Test
+  @Transactional
+  void test6() {
+    log.debug("============= 테스트6 ============");
+    PetType petType = new PetType();
+    petType.setName("돼지");
+    petTypeRepository.save(petType);
+    log.debug("저장된 id:{}", petType.getId());
+    ids.add(petType.getId());
+    petType.setName("꿀꿀이");
+
+    //flush를 수행하면 update 쿼리가 수행된다.
+    petTypeRepository.flush();
+
+    PetType pet1 = petTypeRepository.findById(petType.getId()).get();
+    assertThat(pet1.getName()).isEqualTo("꿀꿀이");
 
   }
 }
