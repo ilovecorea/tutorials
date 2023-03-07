@@ -12,7 +12,9 @@ server:
 petclinic:
   security:
     enable: false
-
+logging:
+  level:
+    root: info
 ---
 spring:
   config:
@@ -33,12 +35,15 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
-
----
-spring:
-  config:
-    activate:
-      on-profile: debug
-logging:
-  level:
-    root: debug
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+#logging:
+#  level:
+#    com.example.petclinic: debug
+#    com.github.dockerjava: warn
+#    com.github.dockerjava.zerodep.shaded.org.apache.hc.client5.http.wire: off
+#    org.hibernate.sql: debug
+#    org.hibernate.type.descriptor.sql: trace
