@@ -114,7 +114,7 @@ public class ClinicServiceTests extends BaseServiceTests {
     pet.setType(EntityUtils.getById(types, PetType.class, 2));
     pet.setBirthDate(LocalDate.now());
     pet.setOwnerId(owner6.getId());
-    owner6.addPet(pet);
+    owner6.getPets().add(pet);
     this.clinicService.saveOwner(owner6).block();
     assertThat(owner6.getPets().size(), is(found + 1));
 
@@ -152,7 +152,7 @@ public class ClinicServiceTests extends BaseServiceTests {
     Pet pet7 = this.clinicService.findPetById(7).block();
     int found = pet7.getVisits().size();
     Visit visit = new Visit();
-    pet7.addVisit(visit);
+    pet7.getVisits().add(visit);
     visit.setPetId(pet7.getId());
     visit.setDescription("test");
     this.clinicService.saveVisit(visit).block();

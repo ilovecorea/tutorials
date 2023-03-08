@@ -51,7 +51,7 @@ public class Pet implements Persistable<Integer> {
   private Owner owner;
 
   @Transient
-  private List<Visit> visits;
+  private List<Visit> visits = new ArrayList<>();
 
   public Pet setType(PetType type) {
     this.type = type;
@@ -68,10 +68,4 @@ public class Pet implements Persistable<Integer> {
     return this.id == null;
   }
 
-  public void addVisit(Visit visit) {
-    if (visits == null) {
-      visits = new ArrayList<>();
-    }
-    visits.add(visit);
-  }
 }

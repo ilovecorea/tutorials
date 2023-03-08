@@ -1,5 +1,6 @@
 package com.example.petclinic.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +34,7 @@ public class User implements Persistable<String> {
     private Boolean enabled;
 
     @Transient
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     @Transient
     private Boolean isNew;

@@ -17,8 +17,7 @@ public interface OwnerRepository extends R2dbcRepository<Owner, Integer> {
 
 //  Flux<Owner> findByLastName(String lastName);
 
-  default Flux<Owner> findByLastName(DatabaseClient client, String lastName) {
-    String sql = """
+  String sql = """
         select 
           o.id,
           o.first_name,
@@ -34,37 +33,48 @@ public interface OwnerRepository extends R2dbcRepository<Owner, Integer> {
         from owners o
         inner join pets p on p.owner_id = o.id
         """.trim();
-    if (StringUtils.isNotBlank(lastName)) {
-      sql = sql + " where o.last_name = :lastName";
-    }
 
+  default Flux<Owner> findAll(DatabaseClient client) {
     return client
         .sql(sql)
         .fetch()
         .all()
         .sort(Comparator.comparing(result -> (Integer) result.get("id")))
         .bufferUntilChanged(result -> result.get("id"))
-        .map(result -> {
-          List<Pet> pets = result.stream()
-              .map(row -> Pet.builder()
-                  .id((Integer) row.get("pet_id"))
-                  .name((String) row.get("name"))
-                  .birthDate((LocalDate) row.get("birth_date"))
-                  .typeId((Integer) row.get("type_id"))
-                  .ownerId((Integer) row.get("owner_id"))
-                  .build()).toList();
-          Map<String, Object> row = result.get(0);
-          Owner owner = Owner.builder()
-              .id((Integer) row.get("id"))
-              .firstName((String) row.get("first_name"))
-              .lastName((String) row.get("last_name"))
-              .address((String) row.get("address"))
-              .city((String) row.get("city"))
-              .telephone((String) row.get("telephone"))
-              .pets(pets)
-              .build();
+        .map(result -> getOwner(result));
+  }
 
-          return owner;
-        });
+  default Flux<Owner> findByLastName(DatabaseClient client, String lastName) {
+    return client
+        .sql(sql + " where o.last_name = :lastName")
+        .bind("lastName", lastName)
+        .fetch()
+        .all()
+        .sort(Comparator.comparing(result -> (Integer) result.get("id")))
+        .bufferUntilChanged(result -> result.get("id"))
+        .map(result -> getOwner(result));
+  }
+
+  private Owner getOwner(List<Map<String, Object>> result) {
+    List<Pet> pets = result.stream()
+        .map(row -> Pet.builder()
+            .id((Integer) row.get("pet_id"))
+            .name((String) row.get("name"))
+            .birthDate((LocalDate) row.get("birth_date"))
+            .typeId((Integer) row.get("type_id"))
+            .ownerId((Integer) row.get("owner_id"))
+            .build()).toList();
+    Map<String, Object> row = result.get(0);
+    Owner owner = Owner.builder()
+        .id((Integer) row.get("id"))
+        .firstName((String) row.get("first_name"))
+        .lastName((String) row.get("last_name"))
+        .address((String) row.get("address"))
+        .city((String) row.get("city"))
+        .telephone((String) row.get("telephone"))
+        .pets(pets)
+        .build();
+
+    return owner;
   }
 }

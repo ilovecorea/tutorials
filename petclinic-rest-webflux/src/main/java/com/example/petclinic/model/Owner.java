@@ -36,17 +36,10 @@ public class Owner implements Persistable<Integer> {
   private String telephone;
 
   @Transient
-  private List<Pet> pets;
+  private List<Pet> pets = new ArrayList<>();
 
   public boolean isNew() {
     return this.id == null;
   }
 
-  public Owner addPet(Pet pet) {
-    if (pets == null) {
-      pets = new ArrayList<>();
-    }
-    pets.add(pet);
-    return this;
-  }
 }
