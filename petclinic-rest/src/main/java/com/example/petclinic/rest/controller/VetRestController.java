@@ -83,9 +83,9 @@ public class VetRestController implements VetsApi {
         Vet currentVet = this.clinicService.findVetById(vetId);
         currentVet.setFirstName(vetDto.getFirstName());
         currentVet.setLastName(vetDto.getLastName());
-        currentVet.clearSpecialties();
+        currentVet.getSpecialties().clear();
         for (Specialty spec : specialtyMapper.toSpecialtys(vetDto.getSpecialties())) {
-            currentVet.addSpecialty(spec);
+            currentVet.getSpecialties().add(spec);
         }
         this.clinicService.saveVet(currentVet);
         return new ResponseEntity<>(vetMapper.toVetDto(currentVet), HttpStatus.NO_CONTENT);

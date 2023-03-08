@@ -1,62 +1,54 @@
 package com.example.petclinic.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PropertyComparator;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.Hibernate;
+import org.springframework.core.annotation.Order;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "vets")
 public class Vet extends Person {
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "vet_specialties", joinColumns = @JoinColumn(name = "vet_id"),
-        inverseJoinColumns = @JoinColumn(name = "specialty_id"))
-    private Set<Specialty> specialties;
+  @OrderBy("name asc ")
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "vet_specialties", joinColumns = @JoinColumn(name = "vet_id"),
+      inverseJoinColumns = @JoinColumn(name = "specialty_id"))
+  private Set<Specialty> specialties = new LinkedHashSet<>();
 
-    @JsonIgnore
-    protected Set<Specialty> getSpecialtiesInternal() {
-        if (this.specialties == null) {
-            this.specialties = new HashSet<>();
-        }
-        return this.specialties;
+  @Override
+  public String toString() {
+    return getClass().getSimpleName() + "(" +
+        "id = " + id + ", " +
+        "firstName = " + firstName + ", " +
+        "lastName = " + lastName + ")";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    protected void setSpecialtiesInternal(Set<Specialty> specialties) {
-        this.specialties = specialties;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
     }
+    Vet vet = (Vet) o;
+    return id != null && Objects.equals(id, vet.id);
+  }
 
-    public List<Specialty> getSpecialties() {
-        List<Specialty> sortedSpecs = new ArrayList<>(getSpecialtiesInternal());
-        PropertyComparator.sort(sortedSpecs, new MutableSortDefinition("name", true, true));
-        return Collections.unmodifiableList(sortedSpecs);
-    }
-
-    public void setSpecialties(List<Specialty> specialties) {
-        this.specialties = new HashSet<>(specialties);
-    }
-
-    @JsonIgnore
-    public int getNrOfSpecialties() {
-        return getSpecialtiesInternal().size();
-    }
-
-    public void addSpecialty(Specialty specialty) {
-        getSpecialtiesInternal().add(specialty);
-    }
-
-    public void clearSpecialties() {
-        getSpecialtiesInternal().clear();
-    }
-
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

@@ -16,7 +16,10 @@ import com.example.petclinic.model.Vet;
 import com.example.petclinic.model.Visit;
 import com.example.petclinic.util.EntityUtils;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +51,9 @@ public class ClinicServiceTests extends BaseServiceTests {
     Owner owner = this.clinicService.findOwnerById(1);
     assertThat(owner.getLastName(), startsWith("Franklin"));
     assertThat(owner.getPets().size(), is(1));
-    assertThat(owner.getPets().get(0).getType(), notNullValue());
-    assertThat(owner.getPets().get(0).getType().getName(), equalTo("cat"));
+    List<Pet> pets = owner.getPets().stream().toList();
+    assertThat(pets.get(0).getType(), notNullValue());
+    assertThat(pets.get(0).getType().getName(), equalTo("cat"));
   }
 
   @Test
@@ -66,7 +70,7 @@ public class ClinicServiceTests extends BaseServiceTests {
     owner.setTelephone("4444444444");
     this.clinicService.saveOwner(owner);
     assertThat(owner.getId().longValue(), not(0));
-    assertThat(owner.getPet("null value"), nullValue());
+    assertThat(owner.getPets().isEmpty(), is(true));
     owners = this.clinicService.findOwnerByLastName("Schultz");
     assertThat(owners.size(), is(found + 1));
   }
@@ -104,9 +108,10 @@ public class ClinicServiceTests extends BaseServiceTests {
     Collection<PetType> types = this.clinicService.findPetTypes();
     pet.setType(EntityUtils.getById(types, PetType.class, 2));
     pet.setBirthDate(LocalDate.now());
-    owner6.addPet(pet);
+    owner6.getPets().add(pet);
     assertThat(owner6.getPets().size(), is(found + 1));
 
+    pet.setOwner(owner6);
     this.clinicService.savePet(pet);
     this.clinicService.saveOwner(owner6);
 
@@ -136,9 +141,10 @@ public class ClinicServiceTests extends BaseServiceTests {
 
     Vet vet = EntityUtils.getById(vets, Vet.class, 3);
     assertThat(vet.getLastName(), equalTo("Douglas"));
-    assertThat(vet.getNrOfSpecialties(), is(2));
-    assertThat(vet.getSpecialties().get(0).getName(), equalTo("dentistry"));
-    assertThat(vet.getSpecialties().get(1).getName(), equalTo("surgery"));
+    List<Specialty> specialties = vet.getSpecialties().stream().toList();
+    assertThat(specialties.size(), is(2));
+    assertThat(specialties.get(0).getName(), equalTo("dentistry"));
+    assertThat(specialties.get(1).getName(), equalTo("surgery"));
   }
 
   @Test
@@ -147,8 +153,9 @@ public class ClinicServiceTests extends BaseServiceTests {
     Pet pet7 = this.clinicService.findPetById(7);
     int found = pet7.getVisits().size();
     Visit visit = new Visit();
-    pet7.addVisit(visit);
+    pet7.getVisits().add(visit);
     visit.setDescription("test");
+    visit.setPet(pet7);
     this.clinicService.saveVisit(visit);
     this.clinicService.savePet(pet7);
 

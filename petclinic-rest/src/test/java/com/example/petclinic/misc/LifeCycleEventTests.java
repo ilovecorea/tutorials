@@ -1,9 +1,10 @@
-package com.example.petclinic.service;
+package com.example.petclinic.misc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.petclinic.model.PetType;
 import com.example.petclinic.repository.PetTypeRepository;
+import com.example.petclinic.service.BaseServiceTests;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-//@Transactional
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles({"local"})
 public class LifeCycleEventTests extends BaseServiceTests {

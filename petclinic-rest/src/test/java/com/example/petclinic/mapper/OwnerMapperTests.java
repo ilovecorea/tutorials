@@ -7,6 +7,7 @@ import com.example.petclinic.model.Pet;
 import com.example.petclinic.model.PetType;
 import com.example.petclinic.rest.dto.OwnerDto;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public class OwnerMapperTests {
     pet.setOwner(owner);
     pets.add(pet);
 
-    owner.setPets(pets);
+    owner.setPets(new HashSet<>(pets));
     OwnerDto ownerDto = ownerMapper.toOwnerDto(owner);
     //owner
     assertThat(ownerDto.getId()).isEqualTo(owner.getId());

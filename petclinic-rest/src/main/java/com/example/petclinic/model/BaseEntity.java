@@ -12,6 +12,8 @@ import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +21,8 @@ import org.slf4j.LoggerFactory;
  * id 필드만 있는 상위 엔티티
  */
 @MappedSuperclass
+@Getter
+@Setter
 public class BaseEntity {
 
   private static final Logger log = LoggerFactory.getLogger(BaseEntity.class);
@@ -33,20 +37,13 @@ public class BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected Integer id;
 
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
   @JsonIgnore
   public boolean isNew() {
     //id가 null 이면 persist 아니면 merge
     return this.id == null;
   }
 
+  /*
   @PrePersist
   public void prePersist() {
     log.info("PrePersist Event:{}", this);
@@ -81,4 +78,5 @@ public class BaseEntity {
   public void postLoad() {
     log.info("PostLoad Event:{}", this);
   }
+  */
 }

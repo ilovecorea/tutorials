@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,9 +16,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "pets")
 public class Pet extends NamedEntity {
@@ -33,56 +40,32 @@ public class Pet extends NamedEntity {
   private Owner owner;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
-  private Set<Visit> visits;
+  private Set<Visit> visits = new LinkedHashSet<>();
 
-  public LocalDate getBirthDate() {
-    return this.birthDate;
+  @Override
+  public String toString() {
+    return getClass().getSimpleName() + "(" +
+        "id = " + id + ", " +
+        "name = " + name + ", " +
+        "birthDate = " + birthDate + ", " +
+        "type = " + type + ", " +
+        "owner = " + owner + ")";
   }
 
-  public void setBirthDate(LocalDate birthDate) {
-    this.birthDate = birthDate;
-  }
-
-  public PetType getType() {
-    return this.type;
-  }
-
-  public void setType(PetType type) {
-    this.type = type;
-  }
-
-  public Owner getOwner() {
-    return this.owner;
-  }
-
-  public void setOwner(Owner owner) {
-    this.owner = owner;
-  }
-
-  protected Set<Visit> getVisitsInternal() {
-    if (this.visits == null) {
-      this.visits = new HashSet<>();
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-    return this.visits;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Pet pet = (Pet) o;
+    return id != null && Objects.equals(id, pet.id);
   }
 
-  protected void setVisitsInternal(Set<Visit> visits) {
-    this.visits = visits;
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
-
-  public List<Visit> getVisits() {
-    List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
-    PropertyComparator.sort(sortedVisits, new MutableSortDefinition("date", false, false));
-    return Collections.unmodifiableList(sortedVisits);
-  }
-
-  public void setVisits(List<Visit> visits) {
-    this.visits = new HashSet<>(visits);
-  }
-
-  public void addVisit(Visit visit) {
-    getVisitsInternal().add(visit);
-    visit.setPet(this);
-  }
-
 }

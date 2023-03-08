@@ -1,14 +1,74 @@
 @startuml
-'Entity01 }|..|| Entity02
-'Entity03 }o..o| Entity04
-'Entity05 ||--o{ Entity06
-'Entity07 |o--|| Entity08
 
-users ||..|{ roles
-tyeps ||..|{ pets
-Owner ||..|{ pets
-pets ||..|{ Visits
-specialties ||..|{ vet_specialties
-vet_specialties ||..|{ vets
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity vets {
+  id : serial <<generated>>
+  --
+  first_name : varchar
+  last_name : varchar
+}
+
+entity specialties {
+  id : serial <<generated>>
+  --
+  name : varchar
+}
+
+entity vet_specialties {
+  vet_id : int <<FK>>
+  specialty_id : int <<FK>>
+}
+
+entity types {
+  id : serial <<generated>>
+  --
+  name : varchar
+}
+
+entity owners {
+  id : serial <<generated>>
+  --
+  first_name : varchar
+  last_name : varchar
+  address : varchar
+  city : varchar
+  telephone : varchar
+}
+
+entity pets {
+  id : serial <<generated>>
+  --
+  name : varchar
+  birth_date : date
+  type_id : int <<FK>>
+  owner_id : int <<FK>>
+}
+
+entity visits {
+  id : serial <<generated>>
+  --
+  pet_id : int <<FK>>
+  visit_date : date
+  description : varchar
+}
+
+entity users {
+  username : varchar
+  --
+  password : varchar
+  enabled : boolean
+}
+
+entity roles {
+  id : serial <<generated>>
+  --
+  username : varchar <<FK>>
+  role : varchar
+}
 
 @enduml
