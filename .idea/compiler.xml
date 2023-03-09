@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="petclinic-rest-vertx" />
+        <module name="java-lang" />
       </profile>
       <profile name="Annotation profile for petclinic-rest" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />

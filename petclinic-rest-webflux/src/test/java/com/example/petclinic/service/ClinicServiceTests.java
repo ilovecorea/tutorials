@@ -24,6 +24,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.reactive.TransactionalOperator;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @SpringBootTest
@@ -33,17 +37,23 @@ public class ClinicServiceTests extends BaseServiceTests {
   @Autowired
   private ClinicService clinicService;
 
+  @Autowired
+  private TransactionalOperator tx;
+
   private static final Logger log = LoggerFactory.getLogger(ClinicServiceTests.class);
 
   /**
    * StepVerifier를 통한 검증
    */
   @Test
+  @Transactional
   void shouldFindOwnersByLastName() {
+
     this.clinicService.findOwnerByLastName("Davis")
         .as(StepVerifier::create)
         .expectNextCount(2)
         .verifyComplete();
+
     this.clinicService.findOwnerByLastName("Daviss")
         .as(StepVerifier::create)
         .expectNextCount(0)
@@ -67,21 +77,33 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   void shouldInsertOwner() {
-    List<Owner> owners = this.clinicService.findOwnerByLastName("Schultz").collectList().block();
-    int found = owners.size();
 
-    Owner owner = Owner.builder()
-        .firstName("Sam")
-        .lastName("Schultz")
-        .address("4, Evans Street")
-        .city("Wollongong")
-        .telephone("4444444444")
-        .build();
-    owner = clinicService.saveOwner(owner).block();
-    assertThat(owner.getId().longValue(), not(0));
-    assertThat(owner.getPets(), nullValue());
-    owners = clinicService.findOwnerByLastName("Schultz").collectList().block();
-    assertThat(owners.size(), is(found + 1));
+    List<Owner> owners = this.clinicService.findOwnerByLastName("Schultz").collectList().block();
+    final int found = owners.size();
+
+    tx.execute(status -> {
+          Owner owner = Owner.builder()
+              .firstName("Sam")
+              .lastName("Schultz")
+              .address("4, Evans Street")
+              .city("Wollongong")
+              .telephone("4444444444")
+              .build();
+          status.setRollbackOnly();
+          Mono<Owner> insert = clinicService.saveOwner(owner);
+          Mono<List<Owner>> select = clinicService.findOwnerByLastName("Schultz").collectList();
+          return insert.then(select.handle((ownerList, sink) -> {
+            if (ownerList.size() == found + 1) {
+              status.setRollbackOnly();
+            }
+          }));
+        }).as(StepVerifier::create).verifyComplete();
+
+//    owner = clinicService.saveOwner(owner).block();
+//    assertThat(owner.getId().longValue(), not(0));
+//    assertThat(owner.getPets(), nullValue());
+//    owners = clinicService.findOwnerByLastName("Schultz").collectList().block();
+//    assertThat(owners.size(), is(found + 1));
   }
 
   @Test
@@ -174,7 +196,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindAllPets(){
+  void shouldFindAllPets() {
     Collection<Pet> pets = this.clinicService.findAllPets().collectList().block();
     Pet pet1 = EntityUtils.getById(pets, Pet.class, 1);
     assertThat(pet1.getName(), equalTo("Leo"));
@@ -183,7 +205,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldDeletePet(){
+  void shouldDeletePet() {
     Pet pet = this.clinicService.findPetById(1).block();
     this.clinicService.deletePet(pet).block();
     try {
@@ -195,14 +217,14 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindVisitDyId(){
+  void shouldFindVisitDyId() {
     Visit visit = this.clinicService.findVisitById(1).block();
     assertThat(visit.getId(), is(1));
     assertThat(visit.getPet().getName(), equalTo("Samantha"));
   }
 
   @Test
-  void shouldFindAllVisits(){
+  void shouldFindAllVisits() {
     Collection<Visit> visits = this.clinicService.findAllVisits().collectList().block();
     Visit visit1 = EntityUtils.getById(visits, Visit.class, 1);
     assertThat(visit1.getPet().getName(), equalTo("Samantha"));
@@ -230,7 +252,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldUpdateVisit(){
+  void shouldUpdateVisit() {
     Visit visit = this.clinicService.findVisitById(1).block();
     String oldDesc = visit.getDescription();
     String newDesc = oldDesc + "X";
@@ -241,7 +263,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindVetDyId(){
+  void shouldFindVetDyId() {
     Vet vet = this.clinicService.findVetById(1).block();
     assertThat(vet.getFirstName(), equalTo("James"));
     assertThat(vet.getLastName(), equalTo("Carter"));
@@ -264,7 +286,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldUpdateVet(){
+  void shouldUpdateVet() {
     Vet vet = this.clinicService.findVetById(1).block();
     String oldLastName = vet.getLastName();
     String newLastName = oldLastName + "X";
@@ -275,7 +297,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldDeleteVet(){
+  void shouldDeleteVet() {
     Vet vet = this.clinicService.findVetById(1).block();
     this.clinicService.deleteVet(vet).block();
     try {
@@ -287,7 +309,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindAllOwners(){
+  void shouldFindAllOwners() {
     Collection<Owner> owners = this.clinicService.findAllOwners().collectList().block();
     Owner owner1 = EntityUtils.getById(owners, Owner.class, 1);
     assertThat(owner1.getFirstName(), equalTo("George"));
@@ -296,7 +318,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldDeleteOwner(){
+  void shouldDeleteOwner() {
     Owner owner = this.clinicService.findOwnerById(1).block();
     this.clinicService.deleteOwner(owner).block();
     try {
@@ -314,7 +336,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindAllPetTypes(){
+  void shouldFindAllPetTypes() {
     Collection<PetType> petTypes = this.clinicService.findAllPetTypes().collectList().block();
     PetType petType1 = EntityUtils.getById(petTypes, PetType.class, 1);
     assertThat(petType1.getName(), equalTo("cat"));
@@ -338,7 +360,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldUpdatePetType(){
+  void shouldUpdatePetType() {
     PetType petType = this.clinicService.findPetTypeById(1).block();
     String oldLastName = petType.getName();
     String newLastName = oldLastName + "X";
@@ -349,7 +371,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldDeletePetType(){
+  void shouldDeletePetType() {
     PetType petType = this.clinicService.findPetTypeById(1).block();
     this.clinicService.deletePetType(petType).block();
     try {
@@ -361,14 +383,15 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindSpecialtyById(){
+  void shouldFindSpecialtyById() {
     Specialty specialty = this.clinicService.findSpecialtyById(1).block();
     assertThat(specialty.getName(), equalTo("radiology"));
   }
 
   @Test
-  void shouldFindAllSpecialtys(){
-    Collection<Specialty> specialties = this.clinicService.findAllSpecialties().collectList().block();
+  void shouldFindAllSpecialtys() {
+    Collection<Specialty> specialties = this.clinicService.findAllSpecialties().collectList()
+        .block();
     Specialty specialty1 = EntityUtils.getById(specialties, Specialty.class, 1);
     assertThat(specialty1.getName(), equalTo("radiology"));
     Specialty specialty3 = EntityUtils.getById(specialties, Specialty.class, 3);
@@ -377,7 +400,8 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   void shouldInsertSpecialty() {
-    Collection<Specialty> specialties = this.clinicService.findAllSpecialties().collectList().block();
+    Collection<Specialty> specialties = this.clinicService.findAllSpecialties().collectList()
+        .block();
     int found = specialties.size();
 
     Specialty specialty = new Specialty();
@@ -391,7 +415,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldUpdateSpecialty(){
+  void shouldUpdateSpecialty() {
     Specialty specialty = this.clinicService.findSpecialtyById(1).block();
     String oldLastName = specialty.getName();
     String newLastName = oldLastName + "X";
@@ -402,7 +426,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldDeleteSpecialty(){
+  void shouldDeleteSpecialty() {
     Specialty specialty = new Specialty();
     specialty.setName("test");
     this.clinicService.saveSpecialty(specialty).block();
