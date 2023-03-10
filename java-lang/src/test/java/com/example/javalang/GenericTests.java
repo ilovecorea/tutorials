@@ -2,6 +2,7 @@ package com.example.javalang;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -30,12 +31,14 @@ public class GenericTests {
   }
 
   static class Building {
+
     public void paint() {
       System.out.println("Painting Building");
     }
   }
 
   static class House extends Building {
+
     public void paint() {
       System.out.println("Painting House");
     }
@@ -84,4 +87,5 @@ public class GenericTests {
     subBuildingsList.add(new House());
     paintAllBuildings(subBuildingsList);
   }
+
 }
