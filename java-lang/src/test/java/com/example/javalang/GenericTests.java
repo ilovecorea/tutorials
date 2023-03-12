@@ -88,4 +88,5 @@ public class GenericTests {
     paintAllBuildings(subBuildingsList);
   }
 
+
 }

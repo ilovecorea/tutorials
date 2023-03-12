@@ -4,13 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestTemplate;
 
 public class MethodReferenceTests {
 
   public static class Printer {
 
-    static void pirnt(String s) {
+    static void print(String s) {
       System.out.println(s);
     }
   }
@@ -44,17 +43,17 @@ public class MethodReferenceTests {
 
   @Test
   void test2() {
-    Executable ex1 = s -> Printer.pirnt(s);
+    Executable ex1 = s -> Printer.print(s);
     //static method reference
-    Executable ex2 = Printer::pirnt;
+    Executable ex2 = Printer::print;
     ex1.execute("Hello");
     ex2.execute("Hello");
   }
 
   @Test
   void test3() {
-    Consumer<String> ex1 = s -> Printer.pirnt(s);
-    Consumer<String> ex2 = Printer::pirnt;
+    Consumer<String> ex1 = s -> Printer.print(s);
+    Consumer<String> ex2 = Printer::print;
     ex1.accept("Hello");
     ex2.accept("Hello");
   }
