@@ -28,6 +28,3 @@ spring:
     username: postgres
     password: petclinic
     name: petclinic
-logging:
-  level:
-    root: debug

@@ -31,7 +31,7 @@ public interface OwnerRepository extends R2dbcRepository<Owner, Integer> {
           p.type_id,
           p.owner_id
         from owners o
-        inner join pets p on p.owner_id = o.id
+        left join pets p on p.owner_id = o.id
         """.trim();
 
   default Flux<Owner> findAll(DatabaseClient client) {
