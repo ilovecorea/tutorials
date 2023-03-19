@@ -1,0 +1,66 @@
+@startuml
+
+entity types {
+  id <<generated>>
+  --
+  name
+}
+entity pets {
+  id <<generated>>
+  --
+  name
+  birth_date
+  type_id <<FK>>
+  owner_id <<FK>>
+}
+entity owners {
+  id <<generated>>
+  --
+  first_name
+  last_name
+  address
+  city
+  telephone
+}
+entity visits {
+  id <<generated>>
+  --
+  pet_id <<FK>>
+  visit_date
+}
+entity vets {
+  id <<generated>>
+  --
+  first_name
+  last_name
+}
+entity specialties {
+  id <<generated>>
+  --
+  name
+}
+entity vet_specialties {
+  vet_id <<FK>>
+  specialty_id <<FK>>
+}
+entity users {
+  --
+  username
+  password
+  enabled
+}
+entity roles {
+  id <<generated>>
+  --
+  username <<FK>>
+  role
+}
+
+visits }|--|| pets
+pets }|--|| owners
+pets }|--|| types
+vet_specialties }|--|| vets
+vet_specialties }|--|| specialties
+roles }|--|| users
+
+@enduml

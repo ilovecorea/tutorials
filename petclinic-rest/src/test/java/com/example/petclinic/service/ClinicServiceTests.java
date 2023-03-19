@@ -7,6 +7,8 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.example.petclinic.model.Owner;
 import com.example.petclinic.model.Pet;
@@ -16,10 +18,10 @@ import com.example.petclinic.model.Vet;
 import com.example.petclinic.model.Visit;
 import com.example.petclinic.util.EntityUtils;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
+import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,14 +48,79 @@ public class ClinicServiceTests extends BaseServiceTests {
     assertThat(owners.isEmpty(), is(true));
   }
 
+  /**
+   * LazyInitializationException 발생
+   */
   @Test
-  void shouldFindSingleOwnerWithPet() {
+  void shouldErrorFindSingleOwnerWithPet() {
     Owner owner = this.clinicService.findOwnerById(1);
     assertThat(owner.getLastName(), startsWith("Franklin"));
-    assertThat(owner.getPets().size(), is(1));
+    assertThrows(LazyInitializationException.class, () -> {
+      assertThat(owner.getPets().size(), is(1));
+    });
+//    assertThat(owner.getPets().size(), is(1));
+//    List<Pet> pets = owner.getPets().stream().toList();
+//    assertThat(pets.get(0).getType(), notNullValue());
+//    assertThat(pets.get(0).getType().getName(), equalTo("cat"));
+  }
+
+  /**
+   * no session 발생
+   */
+  @Test
+  @Transactional
+  void shouldFindSingleOwnerWithPet() {
+    Owner owner = this.clinicService.findOwnerById(10);
+    assertThat(owner.getLastName(), startsWith("Estaban"));
+    assertThat(owner.getPets().size(), is(2));
     List<Pet> pets = owner.getPets().stream().toList();
     assertThat(pets.get(0).getType(), notNullValue());
     assertThat(pets.get(0).getType().getName(), equalTo("cat"));
+    assertThat(pets.get(1).getType(), notNullValue());
+    assertThat(pets.get(1).getType().getName(), equalTo("dog"));
+  }
+
+  /**
+   * n + 1 발생
+   */
+  @Test
+  @Transactional
+  void shouldFindAllOwnersWithPets() {
+    List<Owner> owners = this.clinicService.findAllOwners();
+    assertThat(owners.size(), is(10));
+    owners.forEach(owner -> {
+      Set<Pet> pets = owner.getPets();
+      assertThat(pets.size(), greaterThanOrEqualTo(1));
+    });
+  }
+
+  /**
+   * join fetch 사용으로 n + 1 피할수 있음
+   * owner를 List로 받으면 pet의 수만큼 owner 증가됨
+   */
+  @Test
+  @Transactional
+  void shouldFindAllOwnersJoinFetch() {
+    Set<Owner> owners = this.clinicService.findAllOwnersJoinFetch();
+    assertThat(owners.size(), is(10));
+    owners.forEach(owner -> {
+      Set<Pet> pets = owner.getPets();
+      assertThat(pets.size(), greaterThanOrEqualTo(1));
+    });
+  }
+
+  /**
+   * entityGraph 사용으로 n + 1 피할수 있음
+   */
+  @Test
+  @Transactional
+  void shouldFindAllOwnersEntityGraph() {
+    List<Owner> owners = this.clinicService.findAllOwnersEntityGraph();
+    assertThat(owners.size(), is(10));
+    owners.forEach(owner -> {
+      Set<Pet> pets = owner.getPets();
+      assertThat(pets.size(), greaterThanOrEqualTo(1));
+    });
   }
 
   @Test

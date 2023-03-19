@@ -1,0 +1,77 @@
+@startuml
+' uncomment the line below if you're using computer with a retina display
+' skinparam dpi 300
+!define Table(name,desc) class name as "desc" << (T,#FFAAAA) >>
+' we use bold for primary key
+' green color for unique
+' and underscore for not_null
+!define primary_key(x) <b>x</b>
+!define unique(x) <color:green>x</color>
+!define not_null(x) <u>x</u>
+' other tags available:
+' <i></i>
+' <back:COLOR></color>, where color is a color name or html color code
+' (#FFAACC)
+' see: http://plantuml.com/classes.html#More
+hide methods
+hide stereotypes
+
+' entities
+
+Table(vets, "vets\n(수의사)") {
+  primary_key(id) INTEGER
+  first_name VARCHAR[30]
+  last_name VARCHAR[30]
+}
+Table(specialties, "specialties\n(전문의)") {
+  primary_key(id) INTEGER
+  name VARCHAR[80]
+}
+Table(vet_specialties, "vet_specialties\n(전문수의사)") {
+  primary_key(vet_id) INTEGER
+  primary_key(specialty_id) INTEGER
+}
+Table(types, "types\n(동물타입)") {
+  primary_key(id) INTEGER
+  name VARCHAR[80]
+}
+Table(owners, "owners\n(주인)") {
+  primary_key(id) INTEGER
+  first_name VARCHAR[30]
+  last_name VARCHAR[30]
+  address VARCHAR[255]
+  city VARCHAR[80]
+  telephone VARCHAR[20]
+}
+Table(pets, "pets\n(애완동물)") {
+  primary_key(id) INTEGER
+  name VARCHAR[30]
+  birth_date DATE
+  not_null(type_id) INTEGER
+  not_null(owner_id) INTEGER
+}
+Table(visits, "visits\n(방문)") {
+  primary_key(id) INTEGER
+  not_null(pet_id) INTEGER
+  visit_date DATE
+  description VARCHAR[255]
+}
+Table(users, "users\n(사용자)") {
+  username VARCHAR[20]
+  password VARCHAR[20]
+  not_null(enabled) BOOLEAN
+}
+Table(roles, "roles\n(역할)") {
+  primary_key(id) INTEGER
+  not_null(username) VARCHAR[20]
+  not_null(role) VARCHAR[20]
+}
+
+types "1" --> "*" pets : "하나의 동물은 \n여러종류의 애완동물로 길러진다"
+owners "1" --> "*" pets : "하나의 주인은 \n여러마리의 애완동물을 소유한다"
+pets "1" --> "*" visits : "하나의 애완동물은 \n여러번 방문한다"
+vets "1" --> "*" vet_specialties : "하나의 수의사는 \n하나 이상의 전문분야를 가진다"
+specialties "1" --> "*" vet_specialties : "하나의 전문분야를 \n여러명의 수의사가 진료한다"
+users "1" --> "*" roles : "한사람이 \n여러 역할을 가진다"
+
+@enduml

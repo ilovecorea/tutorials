@@ -14,6 +14,7 @@ import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Getter
@@ -45,7 +46,9 @@ public class Owner extends Person {
    * - eager: 연관된 엔티티를 즉시 로딩(비추)
    * - lazy: 연관된 엔티티를 지연 로딩(강추)
    */
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", fetch = FetchType.EAGER)
+//  @BatchSize(size = 1000)
+//  @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", fetch = FetchType.EAGER)
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
   private Set<Pet> pets = new LinkedHashSet<>();
 
   @Override

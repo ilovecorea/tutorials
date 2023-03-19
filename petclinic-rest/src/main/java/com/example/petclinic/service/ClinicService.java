@@ -13,6 +13,7 @@ import com.example.petclinic.repository.SpecialtyRepository;
 import com.example.petclinic.repository.VetRepository;
 import com.example.petclinic.repository.VisitRepository;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
@@ -96,6 +97,16 @@ public class ClinicService {
   @Transactional(readOnly = true)
   public List<Owner> findAllOwners() throws DataAccessException {
     return ownerRepository.findAll();
+  }
+
+  @Transactional(readOnly = true)
+  public Set<Owner> findAllOwnersJoinFetch() throws DataAccessException {
+    return ownerRepository.findAllJoinFetch();
+  }
+
+  @Transactional(readOnly = true)
+  public List<Owner> findAllOwnersEntityGraph() throws DataAccessException {
+    return ownerRepository.findAllEntityGraph();
   }
 
   @Transactional
