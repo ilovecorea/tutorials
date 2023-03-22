@@ -7,9 +7,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="core" />
         <module name="petclinic-rest-vertx" />
         <module name="petclinic-data-rest" />
-        <module name="petclinic-clean-architecture" />
       </profile>
       <profile name="Annotation profile for petclinic-rest" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
