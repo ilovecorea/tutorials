@@ -86,4 +86,17 @@ public class PetTypeRepositoryLiveTest {
         .statusCode(200)
         .log().all();
   }
+
+  @Test
+  public void testSaveBadRequest() {
+    PetType petType = new PetType();
+    given()
+        .contentType(ContentType.JSON)
+        .body(petType)
+        .when()
+        .put("/types/1")
+        .then()
+        .statusCode(400)
+        .log().all();
+  }
 }

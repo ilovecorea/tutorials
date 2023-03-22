@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 public class PetType extends AbstractPersistable<Integer> {
 
   @Column(name = "name")
-  @NotEmpty
+  @NotEmpty(message = "name must not be null")
   private String name;
 
 }
