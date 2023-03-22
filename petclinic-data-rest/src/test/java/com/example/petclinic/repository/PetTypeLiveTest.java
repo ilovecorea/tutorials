@@ -1,6 +1,7 @@
 package com.example.petclinic.repository;
 
 import static io.restassured.RestAssured.when;
+import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import org.example.petclinic.PetclinicDataRestApplication;
@@ -22,6 +23,46 @@ public class PetTypeLiveTest {
   public void testFindAllOk() {
     when()
         .get("/types")
-        .prettyPrint();
+        .then()
+        .assertThat()
+        .statusCode(200)
+        .body("page.size", is(10))
+        .log().all();
+
   }
+
+  @Test
+  public void testFindAllWithProjectionOk() {
+    when()
+        .get("/types?projection=petType")
+        .then()
+        .assertThat()
+        .statusCode(200)
+        .body("page.size", is(10))
+        .log().all();
+
+  }
+
+  @Test
+  public void testFindAllWithPageOk() {
+    when()
+        .get("/types?projection=petType&size=5")
+        .then()
+        .assertThat()
+        .statusCode(200)
+        .body("page.size", is(5))
+        .log().all();
+
+  }
+
+  @Test
+  public void testFindOk() {
+    when()
+        .get("/types/1?projection=petType")
+        .then()
+        .assertThat()
+        .statusCode(200)
+        .log().all();
+  }
+
 }

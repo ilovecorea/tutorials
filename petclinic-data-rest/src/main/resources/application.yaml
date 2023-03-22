@@ -12,3 +12,9 @@ spring:
     init:
       schema-locations: "classpath:hsql/initDB.sql"
       data-locations: "classpath:hsql/populateDB.sql"
+  data:
+    rest:
+      default-page-size: 10
+#      default-media-type: application/json
+#  hateoas:
+#    use-hal-as-default-json-media-type: false
