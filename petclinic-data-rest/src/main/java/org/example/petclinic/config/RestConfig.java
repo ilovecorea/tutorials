@@ -1,5 +1,6 @@
 package org.example.petclinic.config;
 
+import org.example.petclinic.projection.OwnerProjection;
 import org.example.petclinic.projection.PetTypeProjection;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
@@ -15,5 +16,6 @@ public class RestConfig implements RepositoryRestConfigurer {
       CorsRegistry cors) {
     //petType 프로젝션을 등록
     repositoryRestConfiguration.getProjectionConfiguration().addProjection(PetTypeProjection.class);
+    repositoryRestConfiguration.getProjectionConfiguration().addProjection(OwnerProjection.class);
   }
 }

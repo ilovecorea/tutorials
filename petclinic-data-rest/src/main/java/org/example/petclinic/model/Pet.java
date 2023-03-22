@@ -26,7 +26,7 @@ public class Pet extends AbstractPersistable<Integer> {
 
   @Column(name = "name")
   @NotEmpty
-  protected String name;
+  private String name;
 
   @Column(name = "birth_date", columnDefinition = "DATE")
   private LocalDate birthDate;

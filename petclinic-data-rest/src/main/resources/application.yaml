@@ -8,6 +8,7 @@ spring:
     database-platform: org.hibernate.dialect.HSQLDialect
     hibernate:
       ddl-auto: none
+      use-new-id-generator-mappings: true
   sql:
     init:
       schema-locations: "classpath:hsql/initDB.sql"

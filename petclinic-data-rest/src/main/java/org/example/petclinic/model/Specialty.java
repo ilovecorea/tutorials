@@ -1,7 +1,9 @@
 package org.example.petclinic.model;
 
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -18,7 +20,8 @@ public class Specialty extends AbstractPersistable<Integer> {
 
   @Column(name = "name")
   @NotEmpty
-  protected String name;
+  private String name;
 
-
+  @ManyToMany(mappedBy = "specialties")
+  private Set<Vet> vets;
 }

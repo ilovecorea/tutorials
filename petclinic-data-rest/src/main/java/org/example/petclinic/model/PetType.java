@@ -18,6 +18,6 @@ public class PetType extends AbstractPersistable<Integer> {
 
   @Column(name = "name")
   @NotEmpty
-  protected String name;
+  private String name;
 
 }
