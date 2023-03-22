@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:hsqldb:mem:petclinic
+    username: sa
+    password:
+  jpa:
+    database: hsql
+    database-platform: org.hibernate.dialect.HSQLDialect
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      schema-locations: "classpath:hsql/initDB.sql"
+      data-locations: "classpath:hsql/populateDB.sql"

@@ -9,7 +9,15 @@
         <option value="$PROJECT_DIR$/petclinic-rest-vertx/pom.xml" />
         <option value="$PROJECT_DIR$/java-lang/java-lang/pom.xml" />
         <option value="$PROJECT_DIR$/java-lang/pom.xml" />
+        <option value="$PROJECT_DIR$/petclinic-data-rest/pom.xml" />
+        <option value="$PROJECT_DIR$/petclinic-clean-architecture/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/java-lang/petclinic-clean-architecture/petclinic-data-rest/pom.xml" />
+        <option value="$PROJECT_DIR$/java-lang/petclinic-clean-architecture/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="19" project-jdk-type="JavaSDK" />
