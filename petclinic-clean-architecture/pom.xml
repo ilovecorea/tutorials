@@ -12,6 +12,7 @@
     <module>petclinic-usecase</module>
     <module>petclinic-gateway</module>
     <module>petclinic-delivery</module>
+    <module>petclinic-helper</module>
   </modules>
   <packaging>pom</packaging>
 
