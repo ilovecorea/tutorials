@@ -13,6 +13,7 @@
     <module>petclinic-gateway</module>
     <module>petclinic-delivery</module>
     <module>petclinic-helper</module>
+    <module>petclinic-application</module>
   </modules>
   <packaging>pom</packaging>
 
@@ -26,6 +27,16 @@
       <dependency>
         <groupId>org.example</groupId>
         <artifactId>petclinic-model</artifactId>
+        <version>${version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.example</groupId>
+        <artifactId>petclinic-delivery</artifactId>
+        <version>${version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.example</groupId>
+        <artifactId>petclinic-gateway</artifactId>
         <version>${version}</version>
       </dependency>
     </dependencies>
