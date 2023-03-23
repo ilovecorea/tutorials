@@ -1,0 +1,24 @@
+Owner:
+  $ref: ./Owner.yaml
+OwnerFields:
+  $ref: ./OwnerFields.yaml
+Pet:
+  $ref: ./Pet.yaml
+PetFields:
+  $ref: ./PetFields.yaml
+PetType:
+  $ref: ./PetType.yaml
+PetTypeFields:
+  $ref: ./PetTypeFields.yaml
+RestError:
+  $ref: ./RestError.yaml
+Specialty:
+  $ref: ./Specialty.yaml
+Vet:
+  $ref: ./Vet.yaml
+VetFields:
+  $ref: ./VetFields.yaml
+Visit:
+  $ref: ./Visit.yaml
+VisitFields:
+  $ref: ./VisitFields.yaml

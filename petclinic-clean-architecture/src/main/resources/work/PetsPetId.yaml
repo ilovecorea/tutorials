@@ -1,0 +1,136 @@
+get:
+  tags:
+    - pet
+  operationId: getPet
+  summary: Get a pet by ID
+  description: Returns the pet  or a 404 error.
+  parameters:
+    - name: petId
+      in: path
+      description: The ID of the pet.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  responses:
+    200:
+      description: Pet details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Pet.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Pet not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+put:
+  tags:
+    - pet
+  operationId: updatePet
+  summary: Update a pet by ID
+  description: Returns the pet or a 404 error.
+  parameters:
+    - name: petId
+      in: path
+      description: The ID of the pet.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  requestBody:
+    description: The pet
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/Pet.yaml'
+    required: true
+  responses:
+    200:
+      description: Pet details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Pet.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Pet not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+delete:
+  tags:
+    - pet
+  operationId: deletePet
+  summary: Delete a pet by ID
+  description: Returns the pet or a 404 error.
+  parameters:
+    - name: petId
+      in: path
+      description: The ID of the pet.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  responses:
+    200:
+      description: Pet details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Pet.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Pet not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'

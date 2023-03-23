@@ -1,0 +1,136 @@
+get:
+  tags:
+    - specialty
+  operationId: getSpecialty
+  summary: Get a specialty by ID
+  description: Returns the specialty or a 404 error.
+  parameters:
+    - name: specialtyId
+      in: path
+      description: The ID of the speciality.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  responses:
+    200:
+      description: Specialty details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Specialty.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Specialty not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+put:
+  tags:
+    - specialty
+  operationId: updateSpecialty
+  summary: Update a specialty by ID
+  description: Returns the specialty or a 404 error.
+  parameters:
+    - name: specialtyId
+      in: path
+      description: The ID of the specialty.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  requestBody:
+    description: The pet
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/Specialty.yaml'
+    required: true
+  responses:
+    200:
+      description: Specialty details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Specialty.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Specialty not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+delete:
+  tags:
+    - specialty
+  operationId: deleteSpecialty
+  summary: Delete a specialty by ID
+  description: Returns the specialty or a 404 error.
+  parameters:
+    - name: specialtyId
+      in: path
+      description: The ID of the specialty.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  responses:
+    200:
+      description: Specialty details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Specialty.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Specialty not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'

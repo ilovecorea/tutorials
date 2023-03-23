@@ -1,0 +1,136 @@
+get:
+  tags:
+    - vet
+  operationId: getVet
+  summary: Get a vet by ID
+  description: Returns the vet or a 404 error.
+  parameters:
+    - name: vetId
+      in: path
+      description: The ID of the vet.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  responses:
+    200:
+      description: Vet details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Vet.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Vet not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+put:
+  tags:
+    - vet
+  operationId: updateVet
+  summary: Update a vet  by ID
+  description: Returns the vet or a 404 error.
+  parameters:
+    - name: vetId
+      in: path
+      description: The ID of the vet.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  requestBody:
+    description: The vet
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/Vet.yaml'
+    required: true
+  responses:
+    200:
+      description: Pet type details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Vet.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Vet not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+delete:
+  tags:
+    - vets
+  operationId: deleteVet
+  summary: Delete a vet by ID
+  description: Returns the vet or a 404 error.
+  parameters:
+    - name: vetId
+      in: path
+      description: The ID of the vet.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  responses:
+    200:
+      description: Vet details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Vet.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Vet not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'

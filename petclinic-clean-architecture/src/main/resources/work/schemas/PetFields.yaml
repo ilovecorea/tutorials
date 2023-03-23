@@ -1,0 +1,22 @@
+title: Pet fields
+description: Editable fields of a pet.
+type: object
+properties:
+  name:
+    title: Name
+    description: The name of the pet.
+    type: string
+    maxLength: 30
+    example: Leo
+  birthDate:
+    title: Birth date
+    description: The date of birth of the pet.
+    type: string
+    format: date
+    example: '2010-09-07'
+  type:
+    $ref: 'PetType.yaml'
+required:
+  - name
+  - birthDate
+  - type

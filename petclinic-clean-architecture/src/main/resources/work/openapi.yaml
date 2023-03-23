@@ -1,0 +1,38 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: lemonhc petclinic sample application
+paths:
+  /owners:
+    $ref: "./Owners.yaml"
+  /owners/{ownerId}:
+    $ref: "./OwnersOwnerId.yaml"
+  /owners/{ownerId}/pets:
+    $ref: "./OwnersOwnerIdPets.yaml"
+  /owners/{ownerId}/pets/{petId}:
+    $ref: "./OwnersOwnerIdPetsPetId.yaml"
+  /owners/{ownerId}/pets/{petId}/visits:
+    $ref: "./OwnersOwnerIdPetsPetIdVisits.yaml"
+  /pettypes:
+    $ref: "./Pettypes.yaml"
+  /pettypes/{petTypeId}:
+    $ref: "./PettypesPetTypeId.yaml"
+  /pets:
+    $ref: "./Pets.yaml"
+  /pets/{petId}:
+    $ref: "./PetsPetId.yaml"
+  /visits:
+    $ref: "./Visits.yaml"
+  /visits/{visitId}:
+    $ref: "./VisitsVisitId.yaml"
+  /specialties:
+    $ref: "./Specialties.yaml"
+  /specialties/{specialtyId}:
+    $ref: "./SpecialtiesSpecialtyId.yaml"
+  /vets:
+    $ref: "./Vets.yaml"
+  /vets/{vetId}:
+    $ref: "./VetsVetId.yaml"
+components:
+  schemas:
+    $ref: "./schemas/_index.yaml"
