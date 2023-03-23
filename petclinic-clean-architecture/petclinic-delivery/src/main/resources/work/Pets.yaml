@@ -1,0 +1,68 @@
+get:
+  tags:
+    - pet
+  operationId: listPets
+  summary: Lists pet
+  description: Returns an array of pet .
+  responses:
+    200:
+      description: Pet types found and returned.
+      headers:
+        ETag:
+          description: An ID for this version of the response.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: './schemas/Pet.yaml'
+    304:
+      description: Not modified.
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+post:
+  tags:
+    - pet
+  operationId: addPet
+  summary: Create a pet
+  description: Creates a pet .
+  requestBody:
+    description: The pet
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/Pet.yaml'
+    required: true
+  responses:
+    200:
+      description: Pet type created successfully.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Pet.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Pet not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'

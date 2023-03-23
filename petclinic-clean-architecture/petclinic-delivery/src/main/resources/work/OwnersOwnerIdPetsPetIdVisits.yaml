@@ -1,0 +1,57 @@
+post:
+  tags:
+    - visit
+  operationId: addVisitToOwner
+  summary: Adds a vet visit
+  description: Records the details of a new vet visit.
+  parameters:
+    - name: ownerId
+      in: path
+      description: The ID of the pet owner.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+    - name: petId
+      in: path
+      description: The ID of the pet.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  requestBody:
+    description: The details of the new vet visit.
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/VisitFields.yaml'
+    required: true
+  responses:
+    201:
+      description: The vet visit was sucessfully added.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Visit.yaml'
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Pet not found for this owner.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'

@@ -1,0 +1,105 @@
+get:
+  tags:
+    - pet
+  operationId: getOwnersPet
+  summary: Get a pet by ID
+  description: Returns the pet or a 404 error.
+  parameters:
+    - name: ownerId
+      in: path
+      description: The ID of the pet owner.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+    - name: petId
+      in: path
+      description: The ID of the pet.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  responses:
+    200:
+      description: Pet details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Pet.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Pet not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+put:
+  tags:
+    - pet
+  operationId: updateOwnersPet
+  summary: Update a pet's details
+  description: Updates the pet record with the specified details.
+  parameters:
+    - name: ownerId
+      in: path
+      description: The ID of the pet owner.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+    - name: petId
+      in: path
+      description: The ID of the pet.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  requestBody:
+    description: The pet details to use for the update.
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/PetFields.yaml'
+    required: true
+  responses:
+    204:
+      description: Update successful.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Pet not found for this owner.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'

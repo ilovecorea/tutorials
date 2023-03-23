@@ -1,0 +1,135 @@
+get:
+  tags:
+    - owner
+  operationId: getOwner
+  summary: Get a pet owner by ID
+  description: Returns the pet owner or a 404 error.
+  parameters:
+    - name: ownerId
+      in: path
+      description: The ID of the pet owner.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  responses:
+    200:
+      description: Owner details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Owner.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Owner not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+put:
+  tags:
+    - owner
+  operationId: updateOwner
+  summary: Update a pet owner's details
+  description: Updates the pet owner record with the specified details.
+  parameters:
+    - name: ownerId
+      in: path
+      description: The ID of the pet owner.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  requestBody:
+    description: The pet owner details to use for the update.
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/OwnerFields.yaml'
+    required: true
+  responses:
+    200:
+      description: Update successful.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Owner.yaml'
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Owner not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+
+delete:
+  tags:
+    - owner
+  operationId: deleteOwner
+  summary: Delete an owner by ID
+  description: Returns the owner or a 404 error.
+  parameters:
+    - name: ownerId
+      in: path
+      description: The ID of the owner.
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        example: 1
+  responses:
+    200:
+      description: Owner details found and returned.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Owner.yaml'
+    304:
+      description: Not modified.
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    404:
+      description: Owner  not found.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
