@@ -16,4 +16,10 @@
     <maven.compiler.target>19</maven.compiler.target>
   </properties>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.example</groupId>
+      <artifactId>petclinic-model</artifactId>
+    </dependency>
+  </dependencies>
 </project>

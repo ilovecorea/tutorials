@@ -10,6 +10,8 @@
   <modules>
     <module>petclinic-model</module>
     <module>petclinic-usecase</module>
+    <module>petclinic-gateway</module>
+    <module>petclinic-delivery</module>
   </modules>
   <packaging>pom</packaging>
 
@@ -17,5 +19,15 @@
     <maven.compiler.source>19</maven.compiler.source>
     <maven.compiler.target>19</maven.compiler.target>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.example</groupId>
+        <artifactId>petclinic-model</artifactId>
+        <version>${version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 </project>
