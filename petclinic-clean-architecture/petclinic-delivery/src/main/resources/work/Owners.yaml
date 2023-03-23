@@ -1,0 +1,73 @@
+post:
+  tags:
+    - owner
+  operationId: addOwner
+  summary: Adds a pet owner
+  description: Records the details of a new pet owner.
+  requestBody:
+    description: The pet owner
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/OwnerFields.yaml'
+    required: true
+  responses:
+    201:
+      description: The pet owner was sucessfully added.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/Owner.yaml'
+    400:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'
+get:
+  tags:
+    - owner
+  operationId: listOwners
+  summary: Lists pet owners
+  description: Returns an array of pet owners.
+  parameters:
+    - name: lastName
+      in: query
+      description: Last name.
+      required: false
+      schema:
+        type: string
+        example: Davis
+  responses:
+    200:
+      description: Owner details found and returned.
+      headers:
+        ETag:
+          description: An ID for this version of the response.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: './schemas/Owner.yaml'
+    304:
+      description: Not modified.
+      headers:
+        ETag:
+          description: An ID for this version of the response.
+          schema:
+            type: string
+    500:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/RestError.yaml'

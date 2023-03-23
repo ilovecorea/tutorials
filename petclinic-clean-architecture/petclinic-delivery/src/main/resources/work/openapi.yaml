@@ -1,0 +1,10 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: lemonhc petclinic sample application
+paths:
+  /owners:
+    $ref: "./Owners.yaml"
+components:
+  schemas:
+    $ref: "./schemas/_index.yaml"

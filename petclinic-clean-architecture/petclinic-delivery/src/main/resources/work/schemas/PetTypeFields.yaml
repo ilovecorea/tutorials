@@ -1,0 +1,13 @@
+title: PetType fields
+description: Editable fields of a pet type.
+type: object
+properties:
+  name:
+    title: Name
+    description: The name of the pet type.
+    type: string
+    maxLength: 80
+    minLength: 1
+    example: cat
+required:
+  - name
