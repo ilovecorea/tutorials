@@ -1,0 +1,13 @@
+database:
+  port: 5432
+  host: localhost
+  database: petclinic
+  username: postgres
+  password: petclinic
+  max-pool-size: 10
+spring:
+  liquibase:
+    change-log: classpath:/liquibase/master.yml
+    url: jdbc:postgresql://localhost:5432/petclinic
+    user: postgres
+    password: petclinic

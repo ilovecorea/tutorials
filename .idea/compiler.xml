@@ -8,8 +8,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="petclinic-rest-vertx" />
-        <module name="petclinic-clean-architecture" />
         <module name="petclinic-data-rest" />
+        <module name="petclinic-clean-architecture" />
       </profile>
       <profile name="Annotation profile for petclinic-rest" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -47,6 +47,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="petclinic-clean-architecture" options="--add-opens=java.base/java.lang=ALL-UNNAMED" />
       <module name="petclinic-data-rest" options="-parameters" />
       <module name="petclinic-rest" options="-parameters -Amapstruct.suppressGeneratorTimestamp=true -Amapstruct.suppressGeneratorVersionInfoComment=true -Amapstruct.defaultComponentModel=spring" />
       <module name="petclinic-rest-webflux" options="-parameters -Amapstruct.suppressGeneratorTimestamp=true -Amapstruct.suppressGeneratorVersionInfoComment=true -Amapstruct.defaultComponentModel=spring" />
