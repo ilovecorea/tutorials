@@ -1,6 +1,11 @@
 package org.example.petclinic;
 
+import io.vertx.config.ConfigRetriever;
+import io.vertx.config.ConfigRetrieverOptions;
+import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -23,13 +28,13 @@ public class PetclinicVerticle extends AbstractVerticle {
 
   @Override
   public void start() {
-    JsonObject config = vertx.getOrCreateContext().config();
     RouterBuilder.create(vertx, "openapi.yaml")
         .onFailure(Throwable::printStackTrace)
         .onSuccess(routerBuilder -> {
-          routerBuilder.mountServicesFromExtensions();
-          routerBuilder.rootHandler(rc ->
-              rc.response().headers().add("Access-Control-Allow-Origin", "*"));
+          routerBuilder.rootHandler(rc -> {
+            rc.response().headers().add("Access-Control-Allow-Origin", "*");
+            rc.next();
+          });
           routerBuilder
               .operation("listPetTypes")
               .handler(rc -> listPetTypeInteractor.listPetType(new ListPetTypeView(rc)));
@@ -39,7 +44,9 @@ public class PetclinicVerticle extends AbstractVerticle {
                   .setPort(8080)
                   .setHost("localhost"))
               .requestHandler(router)
-              .listen();
+              .listen()
+              .onSuccess(httpServer -> log.info("Start petclinic rest server"))
+              .onFailure(throwable -> log.error("error", throwable));
         });
   }
 

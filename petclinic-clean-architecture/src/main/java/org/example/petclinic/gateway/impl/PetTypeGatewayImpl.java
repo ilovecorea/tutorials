@@ -25,8 +25,8 @@ public class PetTypeGatewayImpl implements PetTypeGateway {
   public void findAll(Callback<List<PetType>> callback) {
     String sql = """
         select 
-          id, name, birth_date, type_id, owner_id 
-        from pets""".trim();
+          id, name
+        from types""".trim();
     SqlTemplate
         .forQuery(pool, sql)
         .mapTo(PetTypeRowMapper.INSTANCE)
