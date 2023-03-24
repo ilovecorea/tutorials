@@ -1,4 +1,4 @@
-package org.example.petclinic.model;
+package org.example.petclinic.entities;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.codegen.format.SnakeCase;
@@ -19,19 +19,19 @@ import lombok.experimental.Accessors;
 @RowMapped(formatter = SnakeCase.class)
 @ParametersMapped(formatter = SnakeCase.class)
 @DataObject(generateConverter = true, publicConverter = false)
-public class PetType {
+public class Specialty {
 
   protected Integer id;
 
   private String name;
 
-  public PetType(JsonObject json) {
-    PetTypeConverter.fromJson(json, this);
+  public Specialty(JsonObject json) {
+    SpecialtyConverter.fromJson(json, this);
   }
 
   public JsonObject toJson() {
     JsonObject json = new JsonObject();
-    PetTypeConverter.toJson(this, json);
+    SpecialtyConverter.toJson(this, json);
     return json;
   }
 }

@@ -1,6 +1,6 @@
-package org.example.petclinic.usecase;
+package org.example.petclinic.usecases;
 
-import org.example.petclinic.gateway.PetTypeGateway;
+import org.example.petclinic.gateways.PetTypeGateway;
 import org.example.petclinic.helper.Callback;
 import org.springframework.stereotype.Component;
 

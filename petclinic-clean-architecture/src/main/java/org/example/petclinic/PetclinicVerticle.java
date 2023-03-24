@@ -1,29 +1,34 @@
 package org.example.petclinic;
 
-import io.vertx.config.ConfigRetriever;
-import io.vertx.config.ConfigRetrieverOptions;
-import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.openapi.RouterBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.example.petclinic.delivery.ErrorDelivery;
-import org.example.petclinic.usecase.ListPetTypeInteractor;
-import org.example.petclinic.usecase.ListPetTypeView;
+import org.example.petclinic.controllers.ErrorController;
+import org.example.petclinic.controllers.PetTypeController;
+import org.example.petclinic.usecases.ListPetTypeView;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class PetclinicVerticle extends AbstractVerticle {
 
-  private final ListPetTypeInteractor listPetTypeInteractor;
+//  private final ListPetTypeInteractor listPetTypeInteractor;
 
-  public PetclinicVerticle(ListPetTypeInteractor listPetTypeInteractor) {
-    this.listPetTypeInteractor = listPetTypeInteractor;
+//  public PetclinicVerticle(ListPetTypeInteractor listPetTypeInteractor) {
+//    this.listPetTypeInteractor = listPetTypeInteractor;
+//  }
+
+  @Autowired
+  private final ErrorController errorController;
+
+  private final PetTypeController petTypeController;
+
+  public PetclinicVerticle(ErrorController errorController, PetTypeController petTypeController) {
+    this.errorController = errorController;
+    this.petTypeController = petTypeController;
   }
 
   @Override
@@ -35,11 +40,9 @@ public class PetclinicVerticle extends AbstractVerticle {
             rc.response().headers().add("Access-Control-Allow-Origin", "*");
             rc.next();
           });
-          routerBuilder
-              .operation("listPetTypes")
-              .handler(rc -> listPetTypeInteractor.listPetType(new ListPetTypeView(rc)));
+          petTypeController.build(routerBuilder);
           Router router = routerBuilder.createRouter();
-          ErrorDelivery.build(router);
+          errorController.build(router);
           vertx.createHttpServer(new HttpServerOptions()
                   .setPort(8080)
                   .setHost("localhost"))

@@ -1,10 +1,9 @@
-package org.example.petclinic.usecase;
+package org.example.petclinic.usecases;
 
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.ext.web.RoutingContext;
 import java.util.List;
-import org.example.petclinic.model.PetType;
+import org.example.petclinic.entities.PetType;
 
 public class ListPetTypeView implements ListPetTypeOutputBoundary {
 

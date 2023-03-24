@@ -1,4 +1,4 @@
-package org.example.petclinic.gateway.impl;
+package org.example.petclinic.gateways.impl;
 
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.templates.SqlTemplate;
@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import org.example.petclinic.gateway.PetTypeGateway;
+import org.example.petclinic.entities.PetTypeRowMapper;
+import org.example.petclinic.gateways.PetTypeGateway;
 import org.example.petclinic.helper.Callback;
-import org.example.petclinic.model.PetType;
-import org.example.petclinic.model.PetTypeRowMapper;
+import org.example.petclinic.entities.PetType;
 import org.springframework.stereotype.Component;
 
 @Component

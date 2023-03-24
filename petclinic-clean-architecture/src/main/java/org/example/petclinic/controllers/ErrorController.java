@@ -1,10 +1,12 @@
-package org.example.petclinic.delivery;
+package org.example.petclinic.controllers;
 
 import io.vertx.ext.web.Router;
+import org.springframework.stereotype.Component;
 
-public class ErrorDelivery {
+@Component
+public class ErrorController {
 
-  public static void build(Router router) {
+  public void build(Router router) {
     router.errorHandler(400, rc -> rc.response()
             .setStatusCode(400)
             .setStatusMessage(rc.failure().getMessage())
