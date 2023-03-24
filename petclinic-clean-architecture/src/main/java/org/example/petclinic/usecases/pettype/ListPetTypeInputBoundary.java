@@ -1,4 +1,4 @@
-package org.example.petclinic.usecases;
+package org.example.petclinic.usecases.pettype;
 
 public interface ListPetTypeInputBoundary {
 

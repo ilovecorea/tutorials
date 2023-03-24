@@ -7,7 +7,6 @@ import io.vertx.ext.web.openapi.RouterBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.example.petclinic.controllers.ErrorController;
 import org.example.petclinic.controllers.PetTypeController;
-import org.example.petclinic.usecases.ListPetTypeView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

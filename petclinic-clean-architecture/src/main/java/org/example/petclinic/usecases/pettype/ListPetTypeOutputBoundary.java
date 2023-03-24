@@ -1,4 +1,4 @@
-package org.example.petclinic.usecases;
+package org.example.petclinic.usecases.pettype;
 
 import java.util.List;
 import org.example.petclinic.helper.Callback;

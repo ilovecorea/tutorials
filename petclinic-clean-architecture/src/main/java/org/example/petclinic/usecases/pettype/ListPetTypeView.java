@@ -1,4 +1,4 @@
-package org.example.petclinic.usecases;
+package org.example.petclinic.usecases.pettype;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.ext.web.RoutingContext;

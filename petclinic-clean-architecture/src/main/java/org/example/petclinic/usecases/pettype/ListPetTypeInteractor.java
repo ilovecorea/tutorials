@@ -1,4 +1,4 @@
-package org.example.petclinic.usecases;
+package org.example.petclinic.usecases.pettype;
 
 import org.example.petclinic.gateways.PetTypeGateway;
 import org.example.petclinic.helper.Callback;

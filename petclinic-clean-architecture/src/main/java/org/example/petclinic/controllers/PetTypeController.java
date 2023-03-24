@@ -1,8 +1,8 @@
 package org.example.petclinic.controllers;
 
 import io.vertx.ext.web.openapi.RouterBuilder;
-import org.example.petclinic.usecases.ListPetTypeInteractor;
-import org.example.petclinic.usecases.ListPetTypeView;
+import org.example.petclinic.usecases.pettype.ListPetTypeInteractor;
+import org.example.petclinic.usecases.pettype.ListPetTypeView;
 import org.springframework.stereotype.Component;
 
 @Component
