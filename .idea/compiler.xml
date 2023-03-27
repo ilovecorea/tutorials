@@ -44,6 +44,7 @@
       <module name="petclinic-helper" target="19" />
       <module name="petclinic-model" target="19" />
       <module name="petclinic-usecase" target="19" />
+      <module name="spring-boot-keycloak2" target="19" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
