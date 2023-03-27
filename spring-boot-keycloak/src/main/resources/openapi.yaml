@@ -1,0 +1,54 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: test
+  license:
+    name: lemonhc
+servers:
+  - url: http://localhost:8080/api
+paths:
+  /userInfo:
+    get:
+      security:
+        - OpenId:
+          - email
+          - profile
+      summary: Login user info
+      operationId: getUserInfo
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInfo"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  securitySchemes:
+    OpenId:
+      type: openIdConnect
+      openIdConnectUrl: http://localhost:9000/auth/realms/lemonhc/.well-known/openid-configuration
+  schemas:
+    Error:
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    UserInfo:
+      required:
+        - sub
+        - name
+        - email
+      properties:
+        sub:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
