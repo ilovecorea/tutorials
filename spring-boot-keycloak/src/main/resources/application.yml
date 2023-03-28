@@ -9,12 +9,12 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:9000/auth/realms/lemonhc
+          issuer-uri: http://localhost:9999/auth/realms/site1
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 jwt:
   auth:
     converter:
-      resource-id: lemonhc-app
+      resource-id: site1-client
       principal-attribute: preferred_username
 logging:
   level:
