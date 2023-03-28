@@ -13,6 +13,8 @@
         <option value="$PROJECT_DIR$/petclinic-clean-architecture/pom.xml" />
         <option value="$PROJECT_DIR$/spring-boot-keycloak/pom.xml" />
         <option value="$PROJECT_DIR$/spring-boot-keycloak1/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-boot-keycloak-multi-tenancy/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

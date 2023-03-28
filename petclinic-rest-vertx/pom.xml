@@ -8,6 +8,12 @@
   <artifactId>petclinic-rest-vertx</artifactId>
   <version>1.0-SNAPSHOT</version>
 
+  <parent>
+    <artifactId>tutorials</artifactId>
+    <groupId>org.example</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
   <properties>
     <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>

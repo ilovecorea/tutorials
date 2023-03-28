@@ -8,6 +8,12 @@
   <artifactId>petclinic-clean-architecture</artifactId>
   <version>1.0-SNAPSHOT</version>
 
+  <parent>
+    <artifactId>tutorials</artifactId>
+    <groupId>org.example</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>19</java.version>
