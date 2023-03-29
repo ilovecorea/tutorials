@@ -1,12 +1,11 @@
 package org.exmaple.keycloak;
 
-import static io.restassured.RestAssured.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @Slf4j
 public class UserInfoControllerTest extends BaseTest {
@@ -14,7 +13,7 @@ public class UserInfoControllerTest extends BaseTest {
   @Test
   public void testUserInfo() throws Exception {
     String accessToken = obtainAccessToken(URL, CLINET_ID, CLINET_SECRET, "user", "password");
-    this.mvc.perform(MockMvcRequestBuilders.get("/api/users/me")
+    this.mvc.perform(get("/api/users/me")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken))
         .andExpect(status().isOk());
