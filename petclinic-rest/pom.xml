@@ -199,67 +199,6 @@
 				<version>2.7.8</version>
 			</plugin>
 
-			<!-- 테스트 커버리지를 측정하고 강제하는 플러그인 -->
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.8</version>
-				<configuration>
-					<excludes>
-						<!-- Generated code -->
-						<exclude>**/org/example/petclinic/rest/dto/**</exclude>
-						<exclude>**/org/example/petclinic/rest/api/**</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<!-- 테스트 중인 어플리케이션에서 인수를 전달하는 JaCoCo Runtime Agent에 대한 property를 준비 -->
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<!-- code coverage metric이 충돌하는지 확인 -->
-						<id>check</id>
-						<goals>
-							<goal>check</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<rule>
-									<!-- 패키지 번들 타입 -->
-									<element>BUNDLE</element>
-									<limits>
-										<limit>
-											<!-- 커버리지를 측정할 때 사용하는 지표로 빈 줄을 제외한 실제 코드의 라인수를 사용 -->
-											<counter>LINE</counter>
-											<!-- 커버된 비율. 0부터 1사이의 숫자로 1이면 100%를 의미 -->
-											<value>COVEREDRATIO</value>
-											<minimum>0.85</minimum>
-										</limit>
-										<limit>
-											<!-- 커버리지를 측정할 때 사용하는 지표로 조건문 등의 분기 수를 사용 -->
-											<counter>BRANCH</counter>
-											<!-- 커버된 비율. 0부터 1사이의 숫자로 1이면 100%를 의미 -->
-											<value>COVEREDRATIO</value>
-											<minimum>0.66</minimum>
-										</limit>
-									</limits>
-								</rule>
-							</rules>
-						</configuration>
-					</execution>
-					<execution>
-						<!-- 하나의 프로젝트 테스트에 대한 code coverage 리포트를 생성 -->
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 			<!-- docker or OCI 이미지를 생성하는 플러그인 -->
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>

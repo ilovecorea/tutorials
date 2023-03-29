@@ -5,12 +5,12 @@ info:
   license:
     name: lemonhc
 servers:
-  - url: http://localhost:8080/api
+  - url: http://localhost:8080
 paths:
-  /userInfo:
+  /users/me:
     get:
       security:
-        - OpenId:
+        - openId:
           - email
           - profile
       summary: Login user info
@@ -30,9 +30,9 @@ paths:
                 $ref: "#/components/schemas/Error"
 components:
   securitySchemes:
-    OpenId:
+    openId:
       type: openIdConnect
-      openIdConnectUrl: http://localhost:9000/auth/realms/lemonhc/.well-known/openid-configuration
+      openIdConnectUrl: http://localhost:9999/auth/realms/site1/.well-known/openid-configuration
   schemas:
     Error:
       required:

@@ -43,7 +43,6 @@ public class BaseEntity {
     return this.id == null;
   }
 
-  /*
   @PrePersist
   public void prePersist() {
     log.info("PrePersist Event:{}", this);
@@ -78,5 +77,4 @@ public class BaseEntity {
   public void postLoad() {
     log.info("PostLoad Event:{}", this);
   }
-  */
 }

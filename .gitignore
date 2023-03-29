@@ -326,3 +326,11 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,maven,gradle,node
 /spring-petclinic-angular/
 /docker/postgres_data/
+/petclinic-rest/.idea/.gitignore
+/petclinic-rest/.idea/compiler.xml
+/petclinic-rest/.idea/encodings.xml
+/petclinic-rest/HELP.md
+/petclinic-rest-webflux/HELP.md
+/petclinic-rest/.idea/jarRepositories.xml
+/petclinic-rest/.idea/misc.xml
+/petclinic-rest/.idea/uiDesigner.xml

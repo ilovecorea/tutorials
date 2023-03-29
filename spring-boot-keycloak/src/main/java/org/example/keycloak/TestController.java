@@ -19,7 +19,7 @@ public class TestController {
     return Map.of("userName", userName, "userEmail", userEmail);
   }
 
-  @GetMapping("/user")
+  @GetMapping(value = "/user", produces = "application/json")
   public Map<String, Object> getUser(Principal principal) {
     JwtAuthenticationToken token = (JwtAuthenticationToken) principal;
     String userName = (String) token.getTokenAttributes().get("preferred_username");

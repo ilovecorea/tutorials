@@ -1,7 +1,7 @@
 package org.example.keycloak;
 
-import com.example.keycloak.UserInfoApi;
 import com.example.keycloak.UserInfoDto;
+import com.example.keycloak.UsersApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,11 +9,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
-@RestController
-public class UserInfoController implements UserInfoApi {
+@RequestMapping("/api")
+public class UserInfoController implements UsersApi {
 
   @Override
   @PreAuthorize("hasAuthority('SCOPE_email') and hasAuthority('SCOPE_profile') and hasAuthority('ROLE_user')")
