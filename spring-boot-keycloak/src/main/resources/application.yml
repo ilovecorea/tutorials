@@ -12,7 +12,7 @@ spring:
 jwt:
   auth:
     converter:
-      resource-id: site1-client
+      resource-id: app-cli
       principal-attribute: preferred_username
 logging:
   level:

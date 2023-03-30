@@ -4,7 +4,7 @@
 * http://localhost:9999 접속 
 * admin/P@ssw0rd 로그인 
 * site1 realm 생성 
-* site1-client 생성
+* app-cli 생성
   * Client authentication: off
   * Valid redirect URIs: http://localhost:8080/*
   * admin, user client role 생성 
@@ -14,12 +14,12 @@
   * Credentials
     * Password: password
     * Temporary: off
-  * Role mapping: site1-client > user
+  * Role mapping: app-cli > user
 * 관리자 사용자 생성
   * Username: admin
   * Email: admin@example.com
   * Credentials
     * Password: password
     * Temporary: off
-  * Role mapping: site1-client > admin
+  * Role mapping: app-cli > admin
 

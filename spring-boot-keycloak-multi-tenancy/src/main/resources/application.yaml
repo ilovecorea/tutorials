@@ -3,6 +3,7 @@ spring:
     oauth2:
       resourceserver:
         site1:
+          issure-uri: http://localhost:9999/auth/realms/site1
           jwk-set-uri: http://localhost:9999/auth/realms/site1/.well-known/openid-configuration
         site2:
           introspection-uri: http://localhost:9999/auth/realms/site2/protocol/openid-connect/token/introspect

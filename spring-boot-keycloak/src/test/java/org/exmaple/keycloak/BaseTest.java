@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 public class BaseTest {
 
   public static final String URL = "http://localhost:9999/auth/realms/site1/protocol/openid-connect/token";
-  public static final String CLINET_ID = "site1-client";
+  public static final String CLINET_ID = "app-cli";
   public static final String CLINET_SECRET = null;
 
   @Autowired
