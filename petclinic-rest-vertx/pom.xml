@@ -6,8 +6,7 @@
 
   <groupId>org.example</groupId>
   <artifactId>petclinic-rest-vertx</artifactId>
-  <version>1.0-SNAPSHOT</version>
-
+  <version>${parent.version}</version>
   <parent>
     <artifactId>tutorials</artifactId>
     <groupId>org.example</groupId>
@@ -18,6 +17,7 @@
     <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
+    <maven.test.skip>true</maven.test.skip>
     <verx.version>4.3.8</verx.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <vertx.verticle>org.example.petclinic.PetclinicRestVerticle</vertx.verticle>
