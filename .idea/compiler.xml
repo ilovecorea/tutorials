@@ -10,6 +10,7 @@
         <module name="spring-boot-keycloak" />
         <module name="petclinic-clean-architecture" />
         <module name="spring-boot-keycloak-multi-tenancy" />
+        <module name="java-lang" />
         <module name="petclinic-rest-vertx" />
         <module name="petclinic-data-rest" />
       </profile>
