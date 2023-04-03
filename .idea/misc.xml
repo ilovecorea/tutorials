@@ -21,6 +21,7 @@
       <set>
         <option value="$PROJECT_DIR$/java-lang/petclinic-clean-architecture/petclinic-data-rest/pom.xml" />
         <option value="$PROJECT_DIR$/java-lang/petclinic-clean-architecture/pom.xml" />
+        <option value="$PROJECT_DIR$/java-lang/reactive-test/pom.xml" />
         <option value="$PROJECT_DIR$/petclinic-clean-architecture/petclinic-application/pom.xml" />
         <option value="$PROJECT_DIR$/petclinic-clean-architecture/petclinic-delivery/pom.xml" />
         <option value="$PROJECT_DIR$/petclinic-clean-architecture/petclinic-gateway/pom.xml" />

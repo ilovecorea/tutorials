@@ -18,5 +18,6 @@
     <module>spring-boot-keycloak</module>
     <module>spring-boot-keycloak-multi-tenancy</module>
     <module>sse-test</module>
+    <module>reactive-test</module>
   </modules>
 </project>
