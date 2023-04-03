@@ -8,10 +8,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="spring-boot-keycloak" />
-        <module name="petclinic-clean-architecture" />
         <module name="spring-boot-keycloak-multi-tenancy" />
         <module name="java-lang" />
         <module name="petclinic-rest-vertx" />
+        <module name="sse-test" />
+        <module name="petclinic-clean-architecture" />
         <module name="petclinic-data-rest" />
       </profile>
       <profile name="Annotation profile for petclinic-rest-webflux" enabled="true">
