@@ -68,6 +68,21 @@ public class ClinicServiceTests extends BaseServiceTests {
    * no session 발생
    */
   @Test
+//  @Transactional
+  void shouldFindSingleOwnerWithPetFailed() {
+    assertThrows(LazyInitializationException.class, () -> {
+      Owner owner = this.clinicService.findOwnerById(10);
+      assertThat(owner.getLastName(), startsWith("Estaban"));
+      assertThat(owner.getPets().size(), is(2));
+      List<Pet> pets = owner.getPets().stream().toList();
+      assertThat(pets.get(0).getType(), notNullValue());
+      assertThat(pets.get(0).getType().getName(), equalTo("cat"));
+      assertThat(pets.get(1).getType(), notNullValue());
+      assertThat(pets.get(1).getType().getName(), equalTo("dog"));
+    });
+  }
+
+  @Test
   @Transactional
   void shouldFindSingleOwnerWithPet() {
     Owner owner = this.clinicService.findOwnerById(10);
@@ -95,8 +110,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   /**
-   * join fetch 사용으로 n + 1 피할수 있음
-   * owner를 List로 받으면 pet의 수만큼 owner 증가됨
+   * join fetch 사용으로 n + 1 피할수 있음 owner를 List로 받으면 pet의 수만큼 owner 증가됨
    */
   @Test
   @Transactional
@@ -242,7 +256,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindAllPets(){
+  void shouldFindAllPets() {
     Collection<Pet> pets = this.clinicService.findAllPets();
     Pet pet1 = EntityUtils.getById(pets, Pet.class, 1);
     assertThat(pet1.getName(), equalTo("Leo"));
@@ -252,7 +266,7 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   @Transactional
-  void shouldDeletePet(){
+  void shouldDeletePet() {
     Pet pet = this.clinicService.findPetById(1);
     this.clinicService.deletePet(pet);
     try {
@@ -264,14 +278,14 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindVisitDyId(){
+  void shouldFindVisitDyId() {
     Visit visit = this.clinicService.findVisitById(1);
     assertThat(visit.getId(), is(1));
     assertThat(visit.getPet().getName(), equalTo("Samantha"));
   }
 
   @Test
-  void shouldFindAllVisits(){
+  void shouldFindAllVisits() {
     Collection<Visit> visits = this.clinicService.findAllVisits();
     Visit visit1 = EntityUtils.getById(visits, Visit.class, 1);
     assertThat(visit1.getPet().getName(), equalTo("Samantha"));
@@ -301,7 +315,7 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   @Transactional
-  void shouldUpdateVisit(){
+  void shouldUpdateVisit() {
     Visit visit = this.clinicService.findVisitById(1);
     String oldDesc = visit.getDescription();
     String newDesc = oldDesc + "X";
@@ -313,7 +327,7 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   @Transactional
-  void shouldDeleteVisit(){
+  void shouldDeleteVisit() {
     Visit visit = this.clinicService.findVisitById(1);
     this.clinicService.deleteVisit(visit);
     try {
@@ -325,7 +339,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindVetDyId(){
+  void shouldFindVetDyId() {
     Vet vet = this.clinicService.findVetById(1);
     assertThat(vet.getFirstName(), equalTo("James"));
     assertThat(vet.getLastName(), equalTo("Carter"));
@@ -350,7 +364,7 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   @Transactional
-  void shouldUpdateVet(){
+  void shouldUpdateVet() {
     Vet vet = this.clinicService.findVetById(1);
     String oldLastName = vet.getLastName();
     String newLastName = oldLastName + "X";
@@ -362,7 +376,7 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   @Transactional
-  void shouldDeleteVet(){
+  void shouldDeleteVet() {
     Vet vet = this.clinicService.findVetById(1);
     this.clinicService.deleteVet(vet);
     try {
@@ -374,7 +388,7 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindAllOwners(){
+  void shouldFindAllOwners() {
     Collection<Owner> owners = this.clinicService.findAllOwners();
     Owner owner1 = EntityUtils.getById(owners, Owner.class, 1);
     assertThat(owner1.getFirstName(), equalTo("George"));
@@ -384,7 +398,7 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   @Transactional
-  void shouldDeleteOwner(){
+  void shouldDeleteOwner() {
     Owner owner = this.clinicService.findOwnerById(1);
     this.clinicService.deleteOwner(owner);
     try {
@@ -396,13 +410,13 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindPetTypeById(){
+  void shouldFindPetTypeById() {
     PetType petType = this.clinicService.findPetTypeById(1);
     assertThat(petType.getName(), equalTo("cat"));
   }
 
   @Test
-  void shouldFindAllPetTypes(){
+  void shouldFindAllPetTypes() {
     Collection<PetType> petTypes = this.clinicService.findAllPetTypes();
     PetType petType1 = EntityUtils.getById(petTypes, PetType.class, 1);
     assertThat(petType1.getName(), equalTo("cat"));
@@ -428,7 +442,7 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   @Transactional
-  void shouldUpdatePetType(){
+  void shouldUpdatePetType() {
     PetType petType = this.clinicService.findPetTypeById(1);
     String oldLastName = petType.getName();
     String newLastName = oldLastName + "X";
@@ -440,7 +454,7 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   @Transactional
-  void shouldDeletePetType(){
+  void shouldDeletePetType() {
     PetType petType = this.clinicService.findPetTypeById(1);
     this.clinicService.deletePetType(petType);
     try {
@@ -452,13 +466,13 @@ public class ClinicServiceTests extends BaseServiceTests {
   }
 
   @Test
-  void shouldFindSpecialtyById(){
+  void shouldFindSpecialtyById() {
     Specialty specialty = this.clinicService.findSpecialtyById(1);
     assertThat(specialty.getName(), equalTo("radiology"));
   }
 
   @Test
-  void shouldFindAllSpecialtys(){
+  void shouldFindAllSpecialtys() {
     Collection<Specialty> specialties = this.clinicService.findAllSpecialties();
     Specialty specialty1 = EntityUtils.getById(specialties, Specialty.class, 1);
     assertThat(specialty1.getName(), equalTo("radiology"));
@@ -484,7 +498,7 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   @Transactional
-  void shouldUpdateSpecialty(){
+  void shouldUpdateSpecialty() {
     Specialty specialty = this.clinicService.findSpecialtyById(1);
     String oldLastName = specialty.getName();
     String newLastName = oldLastName + "X";
@@ -496,7 +510,7 @@ public class ClinicServiceTests extends BaseServiceTests {
 
   @Test
   @Transactional
-  void shouldDeleteSpecialty(){
+  void shouldDeleteSpecialty() {
     Specialty specialty = new Specialty();
     specialty.setName("test");
     this.clinicService.saveSpecialty(specialty);
