@@ -1,0 +1,14 @@
+<h1>profile: {{config.profile}}</h1>
+<div>
+  <button (click)="addItem()">add-temp</button>
+  <button (click)="deleteAll()">delete-all</button>
+  <button (click)="dataRefresh()">refresh</button>
+  <div>=============</div>
+  <div *ngFor="let person of persons">
+    <div>id: {{person.id}}</div>
+    <div>name: {{person.name}}</div>
+    <div>age: {{person.age}}</div>
+    <button (click)="delete(person.id)">x</button>
+    <div>=============</div>
+  </div>
+</div>

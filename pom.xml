@@ -19,5 +19,6 @@
     <module>spring-boot-keycloak-multi-tenancy</module>
     <module>sse-test</module>
     <module>reactive-test</module>
+    <module>kube</module>
   </modules>
 </project>

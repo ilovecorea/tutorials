@@ -11,6 +11,7 @@
         <module name="spring-boot-keycloak-multi-tenancy" />
         <module name="reactive-test" />
         <module name="java-lang" />
+        <module name="frontend-mini-app" />
         <module name="petclinic-rest-vertx" />
         <module name="sse-test" />
         <module name="petclinic-clean-architecture" />
