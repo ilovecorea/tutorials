@@ -93,11 +93,9 @@
             <image>nginx:1.17.1-alpine</image>
           </from>
           <to>
-            <image>lemoncare.ncr.fin-ntruss.com/${project.artifactId}:${project.version}-${docker.image.profile}</image>
-            <auth>
-              <username>ajAcYaYFvo496244LXcG</username>
-              <password>3PeWi6diAnB7Mp59ADSj8PZI662S2x4IdsYaG50P</password>
-            </auth>
+            <image>
+              registry.hub.docker.com/ilovecorea/${project.artifactId}:${project.version}-${docker.image.profile}
+            </image>
           </to>
           <container>
             <entrypoint>INHERIT</entrypoint>
