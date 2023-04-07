@@ -1,0 +1,102 @@
+# Default values for server-mini-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ilovecorea/server-mini-app
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 1.0-SNAPSHOT-dev
+
+# 도커 이미지 저장소에 접근하기 위한 Secret
+imagePullSecrets:
+  - name: docker-image-registry
+nameOverride: ""
+fullnameOverride: server-mini-app
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# volumes:
+#   - name: pvc-6a7b613a88c749469
+#     persistentVolumeClaim:
+#       claimName: static-pvc
+
+# volumeMounts:
+# - name: pvc-6a7b613a88c749469
+#   mountPath: /n3009558_devqa/pvc6a7b613a88c749469
+
+env:
+  SPRING_PROFILES_ACTIVE: dev
+  TZ: Asia/Seoul
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+# 인그레스 파일을 별도로 생성
+ingress:
+  enabled: false
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/rewrite-target: "/$2"
+    nginx.ingress.kubernetes.io/proxy-body-size: "200m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+  hosts:
+    - host: dev-vpc.lemonhc.com
+      paths:
+        - path: /api(/|$)(.*)
+          pathType: Prefix
+  tls:
+    - secretName: lemonhc2023
+      hosts:
+        - dev-vpc.lemonhc.com
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
