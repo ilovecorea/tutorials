@@ -19,5 +19,6 @@
 
   <modules>
     <module>frontend-mini-app</module>
+    <module>server-mini-app</module>
   </modules>
 </project>

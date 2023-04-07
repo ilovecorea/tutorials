@@ -13,6 +13,7 @@
         <module name="java-lang" />
         <module name="frontend-mini-app" />
         <module name="petclinic-rest-vertx" />
+        <module name="server-mini-app" />
         <module name="sse-test" />
         <module name="petclinic-clean-architecture" />
         <module name="petclinic-data-rest" />

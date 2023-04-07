@@ -1,0 +1,77 @@
+def artifactId = "server-mini-app"
+def emailRecipients = "haejun.ko@lemonhc.com"
+def helmRepo = "https://account_fin-3009558.devtools.fin-ncloud.com/3009558/vpc-infra-helm.git"
+
+def getArtifactVersion(artifactId) {
+    def pom = readMavenPom file: "$artifactId/pom.xml"
+    def version = pom.version
+    return version
+}
+def pVersion = null
+def notifyMail(status, recipients) {
+	emailext (
+	    subject: status + " : " + "${env.JOB_NAME} [${env.BUILD_NUMBER}]",
+	    body: """<p>$status : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
+	    to: recipients
+    )
+}
+
+pipeline {
+    agent any
+
+    environment {
+        GIT_CREDENTIALS_ID = "JENKINS"
+        PROFILE_ENV = "${env.PROFILE}"
+    }
+    
+    stages {
+        stage('Maven Build') {
+            steps {
+                withMaven(maven: 'maven', jdk: 'java19') {
+                    sh """
+                        mvn flatten:clean && \
+                        mvn flatten:flatten && \
+                        mvn -Dmaven.test.skip=true -T 0.5C -am -pl $artifactId clean install -P${env.PROFILE_ENV}
+                    """
+                }
+                script { pVersion = getArtifactVersion(artifactId) }
+            }
+        }
+        stage('Helm SCM') {
+            steps {
+                dir('charts') {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: "${env.PROFILE_ENV}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: "${env.GIT_CREDENTIALS_ID}", url: "$helmRepo"]]])
+                }
+            }
+        }
+        stage('Update Helm Chart') {
+            steps {
+                dir('charts') {
+                    withCredentials([gitUsernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        script {
+                            sh "sed -i 's/tag:.*/tag: $pVersion-${env.PROFILE_ENV}/g' ./$artifactId/values-${env.PROFILE_ENV}.yaml"
+                            sh "git add ."
+                            sh "git commit -m 'Update $artifactId Helm Chart by jenkins'"
+                            sh "git push $helmRepo HEAD:${env.PROFILE_ENV}"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            notifyMail("Successful", emailRecipients)
+        }
+        failure {
+            notifyMail("Failed", emailRecipients)
+        }
+    }
+}
