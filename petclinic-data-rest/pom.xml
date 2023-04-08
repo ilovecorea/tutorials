@@ -6,7 +6,7 @@
 
   <groupId>org.example</groupId>
   <artifactId>petclinic-data-rest</artifactId>
-  <version>${parent.version}</version>
+  <version>${project.parent.version}</version>
   <properties>
     <maven.compiler.source>19</maven.compiler.source>
     <maven.compiler.target>19</maven.compiler.target>

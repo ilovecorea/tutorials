@@ -11,7 +11,7 @@
 
   <artifactId>server-mini-app</artifactId>
   <name>server-mini-app</name>
-  <version>${parent.version}</version>
+  <version>${project.parent.version}</version>
 
   <properties>
     <java.version>19</java.version>

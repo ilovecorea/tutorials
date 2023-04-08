@@ -6,7 +6,7 @@
 
   <groupId>com.example</groupId>
   <artifactId>petclinic-rest-webflux</artifactId>
-  <version>${parent.version}</version>
+  <version>${project.parent.version}</version>
   <parent>
     <artifactId>tutorials</artifactId>
     <groupId>org.example</groupId>
