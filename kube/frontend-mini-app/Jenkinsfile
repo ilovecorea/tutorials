@@ -27,7 +27,7 @@ pipeline {
     agent any
 
     environment {
-        GIT_CREDENTIALS_ID = "JENKINS"
+        GIT_CREDENTIALS_ID = "ilovecorea"
         PROFILE_ENV = "${env.PROFILE}"
     }
     
