@@ -1,6 +1,6 @@
 def artifactId = "server-mini-app"
-def emailRecipients = "haejun.ko@lemonhc.com"
-def helmRepo = "https://account_fin-3009558.devtools.fin-ncloud.com/3009558/vpc-infra-helm.git"
+def emailRecipients = "ilovecorea@gmail.com"
+def helmRepo = "https://github.com/ilovecorea/kube-helm.git"
 
 def getArtifactVersion(artifactId) {
     def pom = readMavenPom file: "$artifactId/pom.xml"
@@ -21,7 +21,7 @@ pipeline {
     agent any
 
     environment {
-        GIT_CREDENTIALS_ID = "JENKINS"
+        GIT_CREDENTIALS_ID = "ilovecorea"
         PROFILE_ENV = "${env.PROFILE}"
     }
     

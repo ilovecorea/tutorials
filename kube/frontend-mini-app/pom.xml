@@ -15,7 +15,7 @@
   <version>${revision}</version>
 
   <properties>
-    <revision>1.0-SNAPSHOT</revision>
+    <revision>${parent.version}</revision>
     <!-- 임시로 버전 변경 v19.6.0 9.4.0 -->
     <frontend.node.version>v16.14.0</frontend.node.version>
     <frontend.npm.version>8.3.1</frontend.npm.version>
