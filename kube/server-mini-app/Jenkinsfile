@@ -29,14 +29,11 @@ pipeline {
         stage('Maven Build') {
             steps {
                 withMaven(maven: 'maven', jdk: 'java19') {
-                  sh """
-                    mvn clean
-                  """
-//                     sh """
-//                         mvn flatten:clean && \
-//                         mvn flatten:flatten && \
-//                         mvn -Dmaven.test.skip=true -T 0.5C -am -pl $artifactId clean install -P${env.PROFILE_ENV}
-//                     """
+                    sh """
+                        mvn flatten:clean && \
+                        mvn flatten:flatten && \
+                        mvn -Dmaven.test.skip=true -T 0.5C -am -pl $artifactId clean install -P${env.PROFILE_ENV}
+                    """
                 }
                 script { pVersion = getArtifactVersion(artifactId) }
             }
