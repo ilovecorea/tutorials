@@ -15,6 +15,7 @@
         <module name="petclinic-rest-vertx" />
         <module name="server-mini-app" />
         <module name="sse-test" />
+        <module name="spring-rest-oauth2" />
         <module name="petclinic-clean-architecture" />
         <module name="petclinic-data-rest" />
       </profile>

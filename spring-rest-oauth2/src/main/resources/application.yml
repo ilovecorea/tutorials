@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+  h2:
+    console:
+      enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 738661917603-cig8n5smvm9l03qpq2og8nmotassa4ka.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile

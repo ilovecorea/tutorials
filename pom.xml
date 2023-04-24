@@ -20,5 +20,6 @@
     <module>sse-test</module>
     <module>reactive-test</module>
     <module>kube</module>
+    <module>spring-rest-oauth2</module>
   </modules>
 </project>
