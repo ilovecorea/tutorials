@@ -9,5 +9,5 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: petclinic
       POSTGRES_DB: petclinic
-#    volumes:
-#      - ./data/postgres/:/var/lib/postgresql/data
+    volumes:
+      - ./data/postgres/:/var/lib/postgresql/data

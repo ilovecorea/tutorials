@@ -334,3 +334,4 @@ gradle-app.setting
 /petclinic-rest/.idea/jarRepositories.xml
 /petclinic-rest/.idea/misc.xml
 /petclinic-rest/.idea/uiDesigner.xml
+/petclinic-rest/src/test/resources/data/postgres/
