@@ -5,7 +5,9 @@ import com.example.security.CustomOAuth2UserService;
 import com.example.security.UserDetailsServiceImpl;
 import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +15,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 
+@Slf4j
 @RequiredArgsConstructor
+@Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
 
@@ -32,6 +36,7 @@ public class WebSecurityConfig {
     return configuration.getAuthenticationManager();
   }
 
+  @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     //@formatter:off
     http.authorizeRequests()
@@ -50,8 +55,8 @@ public class WebSecurityConfig {
             .userService(oauthUserService)
         .and()
           .successHandler((request,response,authentication)-> {
-            System.out.println("AuthenticationSuccessHandler invoked");
-            System.out.println("Authentication name: " + authentication.getName());
+            log.info("AuthenticationSuccessHandler invoked");
+            log.info("Authentication name: " + authentication.getName());
             CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
             userService.processOAuthPostLogin(oauthUser.getEmail());
             response.sendRedirect("/list");
