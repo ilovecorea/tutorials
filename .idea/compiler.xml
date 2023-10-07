@@ -9,13 +9,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="spring-boot-keycloak" />
         <module name="spring-boot-keycloak-multi-tenancy" />
-        <module name="reactive-test" />
         <module name="java-lang" />
-        <module name="frontend-mini-app" />
         <module name="petclinic-rest-vertx" />
-        <module name="server-mini-app" />
-        <module name="sse-test" />
-        <module name="spring-rest-oauth2" />
         <module name="petclinic-clean-architecture" />
         <module name="petclinic-data-rest" />
       </profile>
@@ -31,7 +26,7 @@
         </processorPath>
         <module name="petclinic-rest-webflux" />
       </profile>
-      <profile name="Annotation profile for tutorials" enabled="true">
+      <profile name="Annotation profile for petclinic-rest" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -45,13 +40,20 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="frontend-mini-app" target="19" />
+      <module name="kube" target="19" />
       <module name="petclinic-application" target="19" />
       <module name="petclinic-delivery" target="19" />
       <module name="petclinic-gateway" target="19" />
       <module name="petclinic-helper" target="19" />
       <module name="petclinic-model" target="19" />
       <module name="petclinic-usecase" target="19" />
+      <module name="reactive-test" target="19" />
+      <module name="server-mini-app" target="19" />
       <module name="spring-boot-keycloak2" target="19" />
+      <module name="spring-rest-oauth2" target="17" />
+      <module name="sse-test" target="19" />
+      <module name="tutorials" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

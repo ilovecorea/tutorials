@@ -2,6 +2,11 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="lemonhc-group" />
+      <option name="name" value="lemonhc-group" />
+      <option name="url" value="https://nexus.lemonhc.com/repository/lemonhc-group/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />
